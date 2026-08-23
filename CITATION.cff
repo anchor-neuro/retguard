@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software or the released model weights, please cite the preprint below."
+title: "RETGUARD"
+version: 1.0.0
+date-released: 2026-08-23
+repository-code: "https://github.com/anchor-neuro/retguard"
+license: PolyForm-Noncommercial-1.0.0
+authors:
+  - family-names: Aboelmaaty
+    given-names: Sameh
+    affiliation: "Anchor Neuro"
+preferred-citation:
+  type: article
+  title: "RETGUARD: Calibrated, Out-of-Distribution-Aware Deep Learning for Multi-Disease Retinal Screening from Fundus Photography and Optical Coherence Tomography, with External Validation and Explicit Failure-Mode Reporting"
+  journal: "medRxiv"
+  year: 2026
+  authors:
+    - family-names: Aboelmaaty
+      given-names: Sameh
+      affiliation: "Anchor Neuro"

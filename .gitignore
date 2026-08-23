@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+
+# Model artifacts (distributed via GitHub Releases, never via the git tree)
+*.onnx
+*.onnx.data
+*.npz
+*.pth
+*.ckpt
+
+# Data (no images are committed; root-level data dirs are ignored)
+/data/
+/datasets/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Secrets
+.env

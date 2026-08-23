@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="980" viewBox="0 0 1560 980" font-family="Helvetica, Arial, sans-serif">
+<rect width="1560" height="980" fill="white"/>
+<text x="780" y="40" text-anchor="middle" font-size="21" font-weight="bold" fill="#111">RETGUARD: three per-disease classifiers, one deployment-safety stack</text>
+<text x="780" y="64" text-anchor="middle" font-size="13.5" fill="#555">Each module: EfficientNetV2-M (480×480, ~53.2M parameters), ONNX-exported for offline edge inference</text>
+<rect x="30" y="86" width="1500" height="280" rx="12" fill="#1f4e8c" opacity="0.05"/>
+<text x="46" y="108" font-size="14.5" font-weight="bold" fill="#1f4e8c">Diabetic retinopathy (fundus) — binary referable DR</text>
+<rect x="60" y="160" width="120" height="64" rx="8" fill="#fafbfd" stroke="#1f4e8c" stroke-width="1.8"/>
+<text x="120" y="185" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Input image</text>
+<text x="120" y="201" text-anchor="middle" font-size="10.5" fill="#555">fundus photo</text>
+<line x1="180" y1="192" x2="208" y2="192" stroke="#666" stroke-width="1.8"/>
+<polygon points="208,192 199.78219953718923,195.66984407753614 199.78219953718923,188.33015592246386" fill="#666"/>
+<rect x="208" y="152" width="210" height="80" rx="8" fill="#fafbfd" stroke="#1f4e8c" stroke-width="1.8" stroke-dasharray="6,4"/>
+<text x="313" y="185" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Preprocessing</text>
+<text x="313" y="201" text-anchor="middle" font-size="10.5" fill="#555">deployed recipe unreconstructed</text>
+<text x="313" y="214" text-anchor="middle" font-size="10.5" fill="#555">— see Limitations</text>
+<line x1="418" y1="192" x2="446" y2="192" stroke="#666" stroke-width="1.8"/>
+<polygon points="446,192 437.78219953718923,195.66984407753614 437.78219953718923,188.33015592246386" fill="#666"/>
+<rect x="446" y="160" width="190" height="64" rx="8" fill="#fafbfd" stroke="#1f4e8c" stroke-width="1.8"/>
+<text x="541" y="185" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">EfficientNetV2-M</text>
+<text x="541" y="201" text-anchor="middle" font-size="10.5" fill="#555">480×480 backbone</text>
+<line x1="636" y1="192" x2="664" y2="192" stroke="#666" stroke-width="1.8"/>
+<polygon points="664,192 655.7821995371892,195.66984407753614 655.7821995371892,188.33015592246386" fill="#666"/>
+<rect x="664" y="160" width="130" height="64" rx="8" fill="#fafbfd" stroke="#1f4e8c" stroke-width="1.8"/>
+<text x="729" y="185" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">1,280-d</text>
+<text x="729" y="201" text-anchor="middle" font-size="10.5" fill="#555">feature tap</text>
+<line x1="729" y1="160" x2="729" y2="134" stroke="#777" stroke-width="1.8"/>
+<polygon points="729,134 732.6698440775361,142.21780046281077 725.3301559224639,142.21780046281077" fill="#777"/>
+<rect x="664" y="82" width="250" height="48" rx="8" fill="#fafbfd" stroke="#777" stroke-width="1.8"/>
+<text x="789" y="99" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Mahalanobis OOD gate</text>
+<text x="789" y="115" text-anchor="middle" font-size="10.5" fill="#555">97th-percentile threshold → advisory flag</text>
+<line x1="794" y1="192" x2="822" y2="192" stroke="#666" stroke-width="1.8"/>
+<polygon points="822,192 813.7821995371892,195.66984407753614 813.7821995371892,188.33015592246386" fill="#666"/>
+<rect x="822" y="160" width="130" height="64" rx="8" fill="#fafbfd" stroke="#1f4e8c" stroke-width="1.8"/>
+<text x="887" y="185" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Classifier</text>
+<text x="887" y="201" text-anchor="middle" font-size="10.5" fill="#555">head</text>
+<line x1="952" y1="192" x2="980" y2="192" stroke="#666" stroke-width="1.8"/>
+<polygon points="980,192 971.7821995371892,195.66984407753614 971.7821995371892,188.33015592246386" fill="#666"/>
+<rect x="980" y="160" width="130" height="64" rx="8" fill="#fafbfd" stroke="#1f4e8c" stroke-width="1.8"/>
+<text x="1045" y="185" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Temperature</text>
+<text x="1045" y="201" text-anchor="middle" font-size="10.5" fill="#555">scaling</text>
+<line x1="1110" y1="192" x2="1138" y2="192" stroke="#666" stroke-width="1.8"/>
+<polygon points="1138,192 1129.7821995371892,195.66984407753614 1129.7821995371892,188.33015592246386" fill="#666"/>
+<rect x="1138" y="160" width="130" height="64" rx="8" fill="#fafbfd" stroke="#999" stroke-width="1.8" stroke-dasharray="6,4"/>
+<text x="1203" y="185" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Venn-Abers</text>
+<text x="1203" y="201" text-anchor="middle" font-size="10.5" fill="#555">not fitted —</text>
+<text x="1203" y="214" text-anchor="middle" font-size="10.5" fill="#555">limitation</text>
+<line x1="1268" y1="192" x2="1296" y2="192" stroke="#666" stroke-width="1.8"/>
+<polygon points="1296,192 1287.7821995371892,195.66984407753614 1287.7821995371892,188.33015592246386" fill="#666"/>
+<rect x="1296" y="160" width="100" height="64" rx="8" fill="#fafbfd" stroke="#1f4e8c" stroke-width="1.8"/>
+<text x="1346" y="185" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Threshold</text>
+<text x="1346" y="201" text-anchor="middle" font-size="10.5" fill="#555">pre-specified</text>
+<line x1="1396" y1="192" x2="1420" y2="192" stroke="#666" stroke-width="1.8"/>
+<polygon points="1420,192 1411.7821995371892,195.66984407753614 1411.7821995371892,188.33015592246386" fill="#666"/>
+<rect x="1420" y="152" width="116" height="80" rx="8" fill="#fafbfd" stroke="#1f4e8c" stroke-width="1.8"/>
+<text x="1478" y="185" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Output</text>
+<text x="1478" y="201" text-anchor="middle" font-size="10.5" fill="#555">referral + calibrated</text>
+<text x="1478" y="214" text-anchor="middle" font-size="10.5" fill="#555">probability + OOD flag</text>
+<text x="1478" y="227" text-anchor="middle" font-size="10.5" fill="#555">+ Grad-CAM panel</text>
+<rect x="30" y="366" width="1500" height="280" rx="12" fill="#4c8c2b" opacity="0.05"/>
+<text x="46" y="388" font-size="14.5" font-weight="bold" fill="#4c8c2b">Glaucoma (fundus) — binary referable glaucoma</text>
+<rect x="60" y="440" width="120" height="64" rx="8" fill="#fafbfd" stroke="#4c8c2b" stroke-width="1.8"/>
+<text x="120" y="465" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Input image</text>
+<text x="120" y="481" text-anchor="middle" font-size="10.5" fill="#555">fundus photo</text>
+<line x1="180" y1="472" x2="208" y2="472" stroke="#666" stroke-width="1.8"/>
+<polygon points="208,472 199.78219953718923,475.66984407753614 199.78219953718923,468.33015592246386" fill="#666"/>
+<rect x="208" y="432" width="210" height="80" rx="8" fill="#fafbfd" stroke="#4c8c2b" stroke-width="1.8"/>
+<text x="313" y="465" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Preprocessing</text>
+<text x="313" y="481" text-anchor="middle" font-size="10.5" fill="#555">circle crop → resize 480 (Lanczos4)</text>
+<text x="313" y="494" text-anchor="middle" font-size="10.5" fill="#555">→ Ben Graham unsharp → CLAHE (LAB L)</text>
+<text x="313" y="507" text-anchor="middle" font-size="10.5" fill="#555">→ circle mask</text>
+<line x1="418" y1="472" x2="446" y2="472" stroke="#666" stroke-width="1.8"/>
+<polygon points="446,472 437.78219953718923,475.66984407753614 437.78219953718923,468.33015592246386" fill="#666"/>
+<rect x="446" y="440" width="190" height="64" rx="8" fill="#fafbfd" stroke="#4c8c2b" stroke-width="1.8"/>
+<text x="541" y="465" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">EfficientNetV2-M</text>
+<text x="541" y="481" text-anchor="middle" font-size="10.5" fill="#555">480×480 backbone</text>
+<line x1="636" y1="472" x2="664" y2="472" stroke="#666" stroke-width="1.8"/>
+<polygon points="664,472 655.7821995371892,475.66984407753614 655.7821995371892,468.33015592246386" fill="#666"/>
+<rect x="664" y="440" width="130" height="64" rx="8" fill="#fafbfd" stroke="#4c8c2b" stroke-width="1.8"/>
+<text x="729" y="465" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">1,280-d</text>
+<text x="729" y="481" text-anchor="middle" font-size="10.5" fill="#555">feature tap</text>
+<line x1="729" y1="440" x2="729" y2="414" stroke="#777" stroke-width="1.8"/>
+<polygon points="729,414 732.6698440775361,422.21780046281077 725.3301559224639,422.21780046281077" fill="#777"/>
+<rect x="664" y="362" width="250" height="48" rx="8" fill="#fafbfd" stroke="#777" stroke-width="1.8"/>
+<text x="789" y="379" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Mahalanobis OOD gate</text>
+<text x="789" y="395" text-anchor="middle" font-size="10.5" fill="#555">97th-percentile threshold → advisory flag</text>
+<line x1="794" y1="472" x2="822" y2="472" stroke="#666" stroke-width="1.8"/>
+<polygon points="822,472 813.7821995371892,475.66984407753614 813.7821995371892,468.33015592246386" fill="#666"/>
+<rect x="822" y="440" width="130" height="64" rx="8" fill="#fafbfd" stroke="#4c8c2b" stroke-width="1.8"/>
+<text x="887" y="465" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Classifier</text>
+<text x="887" y="481" text-anchor="middle" font-size="10.5" fill="#555">head</text>
+<line x1="952" y1="472" x2="980" y2="472" stroke="#666" stroke-width="1.8"/>
+<polygon points="980,472 971.7821995371892,475.66984407753614 971.7821995371892,468.33015592246386" fill="#666"/>
+<rect x="980" y="440" width="130" height="64" rx="8" fill="#fafbfd" stroke="#4c8c2b" stroke-width="1.8"/>
+<text x="1045" y="465" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Temperature</text>
+<text x="1045" y="481" text-anchor="middle" font-size="10.5" fill="#555">scaling</text>
+<line x1="1110" y1="472" x2="1138" y2="472" stroke="#666" stroke-width="1.8"/>
+<polygon points="1138,472 1129.7821995371892,475.66984407753614 1129.7821995371892,468.33015592246386" fill="#666"/>
+<rect x="1138" y="440" width="130" height="64" rx="8" fill="#fafbfd" stroke="#4c8c2b" stroke-width="1.8"/>
+<text x="1203" y="465" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Venn-Abers</text>
+<text x="1203" y="481" text-anchor="middle" font-size="10.5" fill="#555">IVAP calibration</text>
+<line x1="1268" y1="472" x2="1296" y2="472" stroke="#666" stroke-width="1.8"/>
+<polygon points="1296,472 1287.7821995371892,475.66984407753614 1287.7821995371892,468.33015592246386" fill="#666"/>
+<rect x="1296" y="440" width="100" height="64" rx="8" fill="#fafbfd" stroke="#4c8c2b" stroke-width="1.8"/>
+<text x="1346" y="465" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Threshold</text>
+<text x="1346" y="481" text-anchor="middle" font-size="10.5" fill="#555">pre-specified</text>
+<line x1="1396" y1="472" x2="1420" y2="472" stroke="#666" stroke-width="1.8"/>
+<polygon points="1420,472 1411.7821995371892,475.66984407753614 1411.7821995371892,468.33015592246386" fill="#666"/>
+<rect x="1420" y="432" width="116" height="80" rx="8" fill="#fafbfd" stroke="#4c8c2b" stroke-width="1.8"/>
+<text x="1478" y="465" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Output</text>
+<text x="1478" y="481" text-anchor="middle" font-size="10.5" fill="#555">referral + calibrated</text>
+<text x="1478" y="494" text-anchor="middle" font-size="10.5" fill="#555">probability + OOD flag</text>
+<text x="1478" y="507" text-anchor="middle" font-size="10.5" fill="#555">+ Grad-CAM panel</text>
+<rect x="30" y="646" width="1500" height="280" rx="12" fill="#c2571f" opacity="0.05"/>
+<text x="46" y="668" font-size="14.5" font-weight="bold" fill="#c2571f">AMD / DME (OCT) — three-class Normal / AMD / DME</text>
+<rect x="60" y="720" width="120" height="64" rx="8" fill="#fafbfd" stroke="#c2571f" stroke-width="1.8"/>
+<text x="120" y="745" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Input image</text>
+<text x="120" y="761" text-anchor="middle" font-size="10.5" fill="#555">OCT B-scan</text>
+<line x1="180" y1="752" x2="208" y2="752" stroke="#666" stroke-width="1.8"/>
+<polygon points="208,752 199.78219953718923,755.6698440775361 199.78219953718923,748.3301559224639" fill="#666"/>
+<rect x="208" y="712" width="210" height="80" rx="8" fill="#fafbfd" stroke="#c2571f" stroke-width="1.8"/>
+<text x="313" y="745" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Preprocessing</text>
+<text x="313" y="761" text-anchor="middle" font-size="10.5" fill="#555">resize 480 (Lanczos)</text>
+<text x="313" y="774" text-anchor="middle" font-size="10.5" fill="#555">normalize</text>
+<line x1="418" y1="752" x2="446" y2="752" stroke="#666" stroke-width="1.8"/>
+<polygon points="446,752 437.78219953718923,755.6698440775361 437.78219953718923,748.3301559224639" fill="#666"/>
+<rect x="446" y="720" width="190" height="64" rx="8" fill="#fafbfd" stroke="#c2571f" stroke-width="1.8"/>
+<text x="541" y="745" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">EfficientNetV2-M</text>
+<text x="541" y="761" text-anchor="middle" font-size="10.5" fill="#555">480×480 backbone</text>
+<line x1="636" y1="752" x2="664" y2="752" stroke="#666" stroke-width="1.8"/>
+<polygon points="664,752 655.7821995371892,755.6698440775361 655.7821995371892,748.3301559224639" fill="#666"/>
+<rect x="664" y="720" width="130" height="64" rx="8" fill="#fafbfd" stroke="#c2571f" stroke-width="1.8"/>
+<text x="729" y="745" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">1,280-d</text>
+<text x="729" y="761" text-anchor="middle" font-size="10.5" fill="#555">feature tap</text>
+<line x1="729" y1="720" x2="729" y2="694" stroke="#777" stroke-width="1.8"/>
+<polygon points="729,694 732.6698440775361,702.2178004628108 725.3301559224639,702.2178004628108" fill="#777"/>
+<rect x="664" y="642" width="250" height="48" rx="8" fill="#fafbfd" stroke="#777" stroke-width="1.8"/>
+<text x="789" y="659" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Mahalanobis OOD gate</text>
+<text x="789" y="675" text-anchor="middle" font-size="10.5" fill="#555">97th-percentile threshold → advisory flag</text>
+<line x1="794" y1="752" x2="822" y2="752" stroke="#666" stroke-width="1.8"/>
+<polygon points="822,752 813.7821995371892,755.6698440775361 813.7821995371892,748.3301559224639" fill="#666"/>
+<rect x="822" y="720" width="130" height="64" rx="8" fill="#fafbfd" stroke="#c2571f" stroke-width="1.8"/>
+<text x="887" y="745" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Classifier</text>
+<text x="887" y="761" text-anchor="middle" font-size="10.5" fill="#555">head</text>
+<line x1="952" y1="752" x2="980" y2="752" stroke="#666" stroke-width="1.8"/>
+<polygon points="980,752 971.7821995371892,755.6698440775361 971.7821995371892,748.3301559224639" fill="#666"/>
+<rect x="980" y="720" width="130" height="64" rx="8" fill="#fafbfd" stroke="#c2571f" stroke-width="1.8"/>
+<text x="1045" y="745" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Temperature</text>
+<text x="1045" y="761" text-anchor="middle" font-size="10.5" fill="#555">scaling</text>
+<line x1="1110" y1="752" x2="1138" y2="752" stroke="#666" stroke-width="1.8"/>
+<polygon points="1138,752 1129.7821995371892,755.6698440775361 1129.7821995371892,748.3301559224639" fill="#666"/>
+<rect x="1138" y="720" width="130" height="64" rx="8" fill="#fafbfd" stroke="#c2571f" stroke-width="1.8"/>
+<text x="1203" y="745" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Venn-Abers</text>
+<text x="1203" y="761" text-anchor="middle" font-size="10.5" fill="#555">IVAP calibration</text>
+<line x1="1268" y1="752" x2="1296" y2="752" stroke="#666" stroke-width="1.8"/>
+<polygon points="1296,752 1287.7821995371892,755.6698440775361 1287.7821995371892,748.3301559224639" fill="#666"/>
+<rect x="1296" y="720" width="100" height="64" rx="8" fill="#fafbfd" stroke="#c2571f" stroke-width="1.8"/>
+<text x="1346" y="745" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Threshold</text>
+<text x="1346" y="761" text-anchor="middle" font-size="10.5" fill="#555">pre-specified</text>
+<line x1="1396" y1="752" x2="1420" y2="752" stroke="#666" stroke-width="1.8"/>
+<polygon points="1420,752 1411.7821995371892,755.6698440775361 1411.7821995371892,748.3301559224639" fill="#666"/>
+<rect x="1420" y="712" width="116" height="80" rx="8" fill="#fafbfd" stroke="#c2571f" stroke-width="1.8"/>
+<text x="1478" y="745" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#222">Output</text>
+<text x="1478" y="761" text-anchor="middle" font-size="10.5" fill="#555">referral + calibrated</text>
+<text x="1478" y="774" text-anchor="middle" font-size="10.5" fill="#555">probability + OOD flag</text>
+<text x="1478" y="787" text-anchor="middle" font-size="10.5" fill="#555">+ Grad-CAM panel</text>
+<rect x="30" y="920" width="1500" height="40" rx="8" fill="#f0f2f5" stroke="#ccc"/>
+<text x="780" y="945" text-anchor="middle" font-size="12.5" fill="#333">Shared training-time defenses: patient-level splits (where identifiers exist) &#8226; cleanlab label cleaning &#8226; focal loss + MixUp &#8226; D4 test-time augmentation &#8226; ONNX opset-17 export</text>
+</svg>

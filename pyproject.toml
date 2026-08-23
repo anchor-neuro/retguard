@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=77,<81"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "retguard"
+dynamic = ["version"]
+description = "Calibrated, out-of-distribution-aware retinal screening inference (research use only; not a medical device)"
+readme = "README.md"
+license = "PolyForm-Noncommercial-1.0.0"
+license-files = ["LICENSE.md"]
+authors = [{ name = "Sameh Aboelmaaty", email = "ghoneim2012@gmail.com" }]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26,<3",
+    "onnxruntime>=1.17,<2",
+    "opencv-python-headless>=4.8,<6",
+    "onnx>=1.15,<2",
+]
+
+[project.urls]
+Repository = "https://github.com/anchor-neuro/retguard"
+
+[project.scripts]
+retguard = "retguard.cli:main"
+
+[tool.setuptools]
+packages = ["retguard"]
+
+[tool.setuptools.dynamic]
+version = { attr = "retguard.__version__" }
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.mypy]
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["cv2.*", "onnxruntime.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "requires_weights: needs the real ONNX release artifacts (run locally, deselected in CI)",
+]

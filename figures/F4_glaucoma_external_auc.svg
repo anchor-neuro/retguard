@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1150" height="820" viewBox="0 0 1150 820" font-family="Helvetica, Arial, sans-serif">
+<rect width="1150" height="820" fill="white"/>
+<text x="575" y="34" text-anchor="middle" font-size="19" font-weight="bold" fill="#111">Glaucoma module: external and dataset-family-holdout AUC under two preprocessing protocols</text>
+<text x="575" y="56" text-anchor="middle" font-size="13" fill="#555">Fixed threshold 0.044776, 8-view TTA, no benchmark-specific tuning. Error bars: bootstrap 95% CI.</text>
+<rect x="910.8090909090909" y="84" width="10.63636363636374" height="558" fill="#4c8c2b" opacity="0.14"/>
+<line x1="916.6181818181818" y1="84" x2="916.6181818181818" y2="642" stroke="#4c8c2b" stroke-width="1.4" stroke-dasharray="5,3"/>
+<text x="916.6181818181818" y="78" text-anchor="middle" font-size="11.5" fill="#3c6e22">internal AIROGS-Val 0.9792 [0.9721–0.9851]</text>
+<line x1="524.5454545454545" y1="84" x2="524.5454545454545" y2="642" stroke="#b04a4a" stroke-width="1.4" stroke-dasharray="2,3"/>
+<text x="524.5454545454545" y="658" text-anchor="middle" font-size="11.5" fill="#8f3b3b">chance (AUC 0.5)</text>
+<line x1="320" y1="642" x2="950" y2="642" stroke="#333" stroke-width="1.2"/>
+<line x1="360.9090909090909" y1="642" x2="360.9090909090909" y2="647" stroke="#333" stroke-width="1.2"/>
+<text x="360.9090909090909" y="676" text-anchor="middle" font-size="12.5" fill="#333">0.3</text>
+<line x1="442.72727272727275" y1="642" x2="442.72727272727275" y2="647" stroke="#333" stroke-width="1.2"/>
+<text x="442.72727272727275" y="676" text-anchor="middle" font-size="12.5" fill="#333">0.4</text>
+<line x1="524.5454545454545" y1="642" x2="524.5454545454545" y2="647" stroke="#333" stroke-width="1.2"/>
+<text x="524.5454545454545" y="676" text-anchor="middle" font-size="12.5" fill="#333">0.5</text>
+<line x1="606.3636363636364" y1="642" x2="606.3636363636364" y2="647" stroke="#333" stroke-width="1.2"/>
+<text x="606.3636363636364" y="676" text-anchor="middle" font-size="12.5" fill="#333">0.6</text>
+<line x1="688.1818181818182" y1="642" x2="688.1818181818182" y2="647" stroke="#333" stroke-width="1.2"/>
+<text x="688.1818181818182" y="676" text-anchor="middle" font-size="12.5" fill="#333">0.7</text>
+<line x1="770" y1="642" x2="770" y2="647" stroke="#333" stroke-width="1.2"/>
+<text x="770" y="676" text-anchor="middle" font-size="12.5" fill="#333">0.8</text>
+<line x1="851.8181818181819" y1="642" x2="851.8181818181819" y2="647" stroke="#333" stroke-width="1.2"/>
+<text x="851.8181818181819" y="676" text-anchor="middle" font-size="12.5" fill="#333">0.9</text>
+<line x1="933.6363636363636" y1="642" x2="933.6363636363636" y2="647" stroke="#333" stroke-width="1.2"/>
+<text x="933.6363636363636" y="676" text-anchor="middle" font-size="12.5" fill="#333">1.0</text>
+<text x="635" y="702" text-anchor="middle" font-size="14" fill="#111">Area under the ROC curve (AUC)</text>
+<line x1="26" y1="98" x2="26" y2="238" stroke="#1f4e8c" stroke-width="2.5"/>
+<text x="34" y="168" font-size="11.5" fill="#1f4e8c" transform="rotate(-90 34 168)" text-anchor="middle">strictly zero-shot</text>
+<line x1="26" y1="254" x2="26" y2="472" stroke="#7a5aa0" stroke-width="2.5"/>
+<text x="34" y="363" font-size="11.5" fill="#7a5aa0" transform="rotate(-90 34 363)" text-anchor="middle">dataset-family holdout †</text>
+<line x1="26" y1="488" x2="26" y2="628" stroke="#8a6d1f" stroke-width="2.5"/>
+<text x="34" y="558" font-size="11.5" fill="#8a6d1f" transform="rotate(-90 34 558)" text-anchor="middle">out of intended use (cropped inputs)</text>
+<text x="304" y="133" text-anchor="end" font-size="13.5" fill="#111">REFUGE-Val (n=400)</text>
+<line x1="822.5272727272727" y1="118" x2="914.2454545454544" y2="118" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="822.5272727272727" y1="114" x2="822.5272727272727" y2="122" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="914.2454545454544" y1="114" x2="914.2454545454544" y2="122" stroke="#1f4e8c" stroke-width="1.8"/>
+<circle cx="874.5636363636363" cy="118" r="6" fill="white" stroke="#1f4e8c" stroke-width="2.2"/>
+<text x="962" y="122" font-size="12" fill="#1f4e8c">0.9278</text>
+<line x1="804.3636363636363" y1="140" x2="909.3363636363637" y2="140" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="804.3636363636363" y1="136" x2="804.3636363636363" y2="144" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="909.3363636363637" y1="136" x2="909.3363636363637" y2="144" stroke="#c2571f" stroke-width="1.8"/>
+<circle cx="861.5545454545454" cy="140" r="6" fill="#c2571f"/>
+<text x="962" y="144" font-size="12" fill="#c2571f">0.9119</text>
+<line x1="312" y1="168" x2="950" y2="168" stroke="#eee" stroke-width="1"/>
+<text x="304" y="211" text-anchor="end" font-size="13.5" fill="#111">ORIGA (n=650)</text>
+<line x1="802.6454545454545" y1="196" x2="854.1090909090909" y2="196" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="802.6454545454545" y1="192" x2="802.6454545454545" y2="200" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="854.1090909090909" y1="192" x2="854.1090909090909" y2="200" stroke="#1f4e8c" stroke-width="1.8"/>
+<circle cx="829.6454545454546" cy="196" r="6" fill="white" stroke="#1f4e8c" stroke-width="2.2"/>
+<text x="962" y="200" font-size="12" fill="#1f4e8c">0.8729</text>
+<line x1="930.690909090909" y1="218" x2="933.6363636363636" y2="218" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="930.690909090909" y1="214" x2="930.690909090909" y2="222" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="933.6363636363636" y1="214" x2="933.6363636363636" y2="222" stroke="#c2571f" stroke-width="1.8"/>
+<circle cx="932.6545454545454" cy="218" r="6" fill="#c2571f"/>
+<text x="962" y="222" font-size="12" fill="#c2571f">0.9988 ‡</text>
+<line x1="312" y1="246" x2="950" y2="246" stroke="#eee" stroke-width="1"/>
+<text x="304" y="289" text-anchor="end" font-size="13.5" fill="#111">FIVES-Test (n=200) †</text>
+<line x1="729.5818181818182" y1="274" x2="849.690909090909" y2="274" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="729.5818181818182" y1="270" x2="729.5818181818182" y2="278" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="849.690909090909" y1="270" x2="849.690909090909" y2="278" stroke="#1f4e8c" stroke-width="1.8"/>
+<circle cx="795.9363636363636" cy="274" r="6" fill="white" stroke="#1f4e8c" stroke-width="2.2"/>
+<text x="962" y="278" font-size="12" fill="#1f4e8c">0.8317</text>
+<circle cx="933.6363636363636" cy="296" r="6" fill="#c2571f"/>
+<text x="921.6363636363636" y="300" text-anchor="end" font-size="11" fill="#8a3d13">1.0000 (degenerate CI at boundary)*</text>
+<line x1="312" y1="324" x2="950" y2="324" stroke="#eee" stroke-width="1"/>
+<text x="304" y="367" text-anchor="end" font-size="13.5" fill="#111">DRISHTI-GS-Test (n=51) †</text>
+<line x1="857.790909090909" y1="352" x2="928.8909090909091" y2="352" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="857.790909090909" y1="348" x2="857.790909090909" y2="356" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="928.8909090909091" y1="348" x2="928.8909090909091" y2="356" stroke="#1f4e8c" stroke-width="1.8"/>
+<circle cx="902.1363636363636" cy="352" r="6" fill="white" stroke="#1f4e8c" stroke-width="2.2"/>
+<text x="962" y="356" font-size="12" fill="#1f4e8c">0.9615</text>
+<circle cx="933.6363636363636" cy="374" r="6" fill="#c2571f"/>
+<text x="921.6363636363636" y="378" text-anchor="end" font-size="11" fill="#8a3d13">1.0000 (degenerate CI at boundary)*</text>
+<line x1="312" y1="402" x2="950" y2="402" stroke="#eee" stroke-width="1"/>
+<text x="304" y="445" text-anchor="end" font-size="13.5" fill="#111">G1020-eval (n=155) †</text>
+<line x1="507.5272727272727" y1="430" x2="686.1363636363636" y2="430" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="507.5272727272727" y1="426" x2="507.5272727272727" y2="434" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="686.1363636363636" y1="426" x2="686.1363636363636" y2="434" stroke="#1f4e8c" stroke-width="1.8"/>
+<circle cx="597.8545454545455" cy="430" r="6" fill="white" stroke="#1f4e8c" stroke-width="2.2"/>
+<text x="962" y="434" font-size="12" fill="#1f4e8c">0.5896</text>
+<line x1="502.1272727272727" y1="452" x2="675.5818181818181" y2="452" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="502.1272727272727" y1="448" x2="502.1272727272727" y2="456" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="675.5818181818181" y1="448" x2="675.5818181818181" y2="456" stroke="#c2571f" stroke-width="1.8"/>
+<circle cx="591.0636363636363" cy="452" r="6" fill="#c2571f"/>
+<text x="962" y="456" font-size="12" fill="#c2571f">0.5813</text>
+<line x1="312" y1="480" x2="950" y2="480" stroke="#eee" stroke-width="1"/>
+<text x="304" y="523" text-anchor="end" font-size="13.5" fill="#111">RIM-ONE DL (n=485)</text>
+<line x1="372.77272727272725" y1="508" x2="456.1454545454545" y2="508" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="372.77272727272725" y1="504" x2="372.77272727272725" y2="512" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="456.1454545454545" y1="504" x2="456.1454545454545" y2="512" stroke="#1f4e8c" stroke-width="1.8"/>
+<circle cx="415.4818181818182" cy="508" r="6" fill="white" stroke="#1f4e8c" stroke-width="2.2"/>
+<text x="962" y="512" font-size="12" fill="#1f4e8c">0.3667</text>
+<line x1="459.82727272727277" y1="530" x2="546.1454545454545" y2="530" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="459.82727272727277" y1="526" x2="459.82727272727277" y2="534" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="546.1454545454545" y1="526" x2="546.1454545454545" y2="534" stroke="#c2571f" stroke-width="1.8"/>
+<circle cx="502.8636363636364" cy="530" r="6" fill="#c2571f"/>
+<text x="962" y="534" font-size="12" fill="#c2571f">0.4735</text>
+<line x1="312" y1="558" x2="950" y2="558" stroke="#eee" stroke-width="1"/>
+<text x="304" y="601" text-anchor="end" font-size="13.5" fill="#111">ACRIMA (n=705)</text>
+<line x1="673.7818181818182" y1="586" x2="731.4636363636364" y2="586" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="673.7818181818182" y1="582" x2="673.7818181818182" y2="590" stroke="#1f4e8c" stroke-width="1.8"/>
+<line x1="731.4636363636364" y1="582" x2="731.4636363636364" y2="590" stroke="#1f4e8c" stroke-width="1.8"/>
+<circle cx="703.3181818181818" cy="586" r="6" fill="white" stroke="#1f4e8c" stroke-width="2.2"/>
+<text x="962" y="590" font-size="12" fill="#1f4e8c">0.7185</text>
+<line x1="577.5636363636363" y1="608" x2="644.4090909090909" y2="608" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="577.5636363636363" y1="604" x2="577.5636363636363" y2="612" stroke="#c2571f" stroke-width="1.8"/>
+<line x1="644.4090909090909" y1="604" x2="644.4090909090909" y2="612" stroke="#c2571f" stroke-width="1.8"/>
+<circle cx="610.3727272727273" cy="608" r="6" fill="#c2571f"/>
+<text x="962" y="612" font-size="12" fill="#c2571f">0.6049</text>
+<circle cx="330" cy="774" r="6" fill="white" stroke="#1f4e8c" stroke-width="2.2"/>
+<text x="344" y="778" font-size="12.5" fill="#111">minimal preprocessing</text>
+<circle cx="530" cy="774" r="6" fill="#c2571f"/>
+<text x="544" y="778" font-size="12.5" fill="#111">Ben Graham (training-domain) preprocessing</text>
+<text x="60" y="796" font-size="11" fill="#666">† train split of this dataset family contributed auxiliary training data &#8226; * every bootstrap resample reproduces AUC 1.0 (CI degenerate at boundary)</text>
+<text x="60" y="811" font-size="11" fill="#666">‡ exceeds all published ORIGA results; unconfirmed pending independent replication</text>
+</svg>
