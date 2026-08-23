@@ -16,6 +16,10 @@ jobs:
           cache: pip
       - name: Install
         run: pip install -e ".[ui]" -r requirements-lock.txt
+      - name: Generate gradio type stubs
+        # gradio writes its component .pyi stubs on first import; the wheel
+        # ships none, so mypy needs one import to see event methods.
+        run: python -c "import gradio"
       - name: Lint
         run: ruff check .
       - name: Type-check
