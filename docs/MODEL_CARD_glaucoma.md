@@ -34,6 +34,7 @@ Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2,
 | License — code | PolyForm Noncommercial 1.0.0 (see LICENSE.md) |
 | Contact | ghoneim2012@gmail.com |
 | Repository | https://github.com/anchor-neuro/retguard |
+| Weights mirror | https://huggingface.co/anchor-neuro/retguard |
 
 **Paper citation.** Aboelmaaty S. RETGUARD: Calibrated, Out-of-Distribution-Aware Deep Learning for Multi-Disease Retinal Screening from Fundus Photography and Optical Coherence Tomography, with External Validation and Explicit Failure-Mode Reporting. Manuscript v1.2, 2026-08-22. Anchor Neuro, Delaware, USA. Submission-ready draft (medRxiv).
 

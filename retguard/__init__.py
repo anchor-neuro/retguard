@@ -7,5 +7,5 @@ See the repository README for installation, quickstart, and license terms.
 
 from retguard.predictor import PredictionResult, Predictor, load
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __all__ = ["PredictionResult", "Predictor", "__version__", "load"]

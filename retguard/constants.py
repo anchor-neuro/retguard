@@ -46,6 +46,11 @@ GLAUCOMA_THRESHOLD: Final = 0.044776
 OCT_TEMPERATURE: Final = 0.819011
 OCT_AMD_THRESHOLD: Final = 0.70
 
+# Decimal places for rendering each module's decision threshold digit-for-digit
+# as the paper and model cards print it (0.204983 / 0.044776 / 0.70; paper
+# section 2.4). Python floats cannot carry the OCT trailing zero on their own.
+THRESHOLD_DISPLAY_DECIMALS: Final = {"dr": 6, "glaucoma": 6, "oct": 2}
+
 # OCT class order as exported: logit/probability columns are
 # [Normal, AMD, DME]; the graph's p_amd output is probability[:, 1]
 # (AMD & DME export_metadata.json "outputs").
@@ -118,3 +123,24 @@ GAP_OUTPUT_NODE: Final = {
     "glaucoma": "/model/backbone/global_pool/flatten/Flatten_output_0",
     "oct": "view",
 }
+
+# Internal tensor holding the last pre-GAP spatial feature map (N, 1280, 15, 15),
+# used for exact analytic Grad-CAM; GAP of this tensor equals the pooled features
+# (verified numerically against the shipped graphs, research_architecture.md §4).
+CAM_SPATIAL_NODE: Final = {
+    "dr": "/model/backbone/bn2/act/Mul_output_0",
+    "glaucoma": "/model/backbone/bn2/act/Mul_output_0",
+    "oct": "silu_146",
+}
+# Heatmap overlay recipe for the UI (ianpan blend convention, research_demos.md §3.9).
+CAM_OVERLAY_ALPHA: Final = 0.4
+# Names of the head initializers in the shipped graphs: GAP -> Gemm(1280->256)
+# -> ReLU -> Gemm(256->K) (research_architecture.md §4.1-4.2). One-time
+# inspection of all three shipped graphs confirmed the OCT export uses the
+# same names as the fundus exports.
+CAM_HEAD_INITIALIZERS: Final = (
+    "model.binary_head.0.weight",
+    "model.binary_head.0.bias",
+    "model.binary_head.3.weight",
+    "model.binary_head.3.bias",
+)

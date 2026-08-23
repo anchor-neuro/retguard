@@ -1,6 +1,7 @@
 # Pins from the Python 3.12 environment that passed the full test gauntlet,
-# excluding parity-harness-only packages (torch, tqdm, pillow) that no shipped
-# code or test imports. The package itself accepts the ranges in pyproject.toml.
+# excluding parity-harness-only packages (torch, torchvision, timm, tqdm) that
+# no shipped code or test imports. The package itself accepts the ranges in
+# pyproject.toml.
 ast_serialize==0.8.0
 attrs==26.1.0
 certifi==2026.7.22
@@ -37,3 +38,29 @@ ruff==0.16.4
 six==1.17.0
 typing_extensions==4.16.0
 urllib3==2.7.0
+# [ui] extra: gradio and its direct dependencies (numpy, packaging, PyYAML,
+# and typing_extensions are already pinned above).
+anyio==4.14.2
+brotli==1.2.0
+fastapi==0.141.1
+gradio==6.25.0
+gradio_client==2.6.0
+groovy==0.1.2
+hf-gradio==0.4.1
+httpx==0.28.1
+huggingface_hub==1.28.0
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+orjson==3.12.0
+pandas==3.0.5
+pillow==12.3.0
+pydantic==2.13.4
+pydub==0.25.1
+python-multipart==0.0.32
+pytz==2026.3.post1
+safehttpx==0.1.7
+semantic-version==2.10.0
+starlette==1.6.0
+tomlkit==0.14.0
+typer==0.27.1
+uvicorn==0.52.4

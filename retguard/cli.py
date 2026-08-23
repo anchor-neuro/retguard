@@ -1,16 +1,24 @@
 # SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # Copyright (c) 2026 Sameh Aboelmaaty / Anchor Neuro. See LICENSE.md and COMMERCIAL-LICENSE.md.
-"""Console entry point: ``retguard download | verify | predict``."""
+"""Console entry point: ``retguard download | verify | predict | serve``."""
 
 import argparse
 import dataclasses
 import json
+import os
+import shutil
 import sys
+import tempfile
+import time
 from pathlib import Path
 
+from retguard import ui_text
 from retguard.constants import MODULES
 from retguard.predictor import load
 from retguard.weights import download, verify
+
+# Matches UPLOAD_SIZE_NOTE ("up to 30 MB"); enforced at the gradio launch layer.
+_SERVE_MAX_FILE_SIZE = "30mb"
 
 
 def main() -> int:
@@ -51,11 +59,22 @@ def main() -> int:
     predict_parser.add_argument("--weights-dir", type=Path, default=None)
     predict_parser.add_argument("--json", action="store_true", dest="as_json")
 
+    serve_parser = subparsers.add_parser(
+        "serve", help="Serve the local research demo UI (requires the [ui] extra)."
+    )
+    serve_parser.add_argument("--port", type=int, default=None)
+    serve_parser.add_argument("--host", default="127.0.0.1")
+    serve_parser.add_argument("--no-browser", action="store_true", dest="no_browser")
+    serve_parser.add_argument("--weights-dir", type=Path, default=None)
+    serve_parser.add_argument("--examples-dir", type=Path, default=None)
+
     arguments = parser.parse_args()
     if arguments.command == "download":
         return _run_download(arguments)
     if arguments.command == "verify":
         return _run_verify(arguments)
+    if arguments.command == "serve":
+        return _run_serve(arguments)
     return _run_predict(arguments)
 
 
@@ -76,6 +95,55 @@ def _run_verify(arguments: argparse.Namespace) -> int:
     for module in _selected_modules(arguments.module):
         verify(module, weights_dir=arguments.weights_dir)
         print(f"{module}: all SHA-256 digests match")
+    return 0
+
+
+def _run_serve(arguments: argparse.Namespace) -> int:
+    # Zero-persistence configuration before any gradio import: telemetry off
+    # and a dedicated temp dir for the delete-cache sweep (V11_BLUEPRINT §5.3).
+    os.environ["GRADIO_ANALYTICS_ENABLED"] = "False"
+    serve_temp_dir = tempfile.mkdtemp(prefix="retguard-serve-")
+    os.environ["GRADIO_TEMP_DIR"] = serve_temp_dir
+    try:
+        from retguard.ui import build_demo, launch_demo
+    except ImportError:
+        print(ui_text.SERVE_MISSING_GRADIO, file=sys.stderr)
+        return 1
+    started = time.perf_counter()
+    demo = build_demo(
+        weights_dir=arguments.weights_dir, examples_dir=arguments.examples_dir
+    )
+    load_seconds = time.perf_counter() - started
+    # gradio refuses to serve files outside its cache unless the directory is
+    # allow-listed; without this an example click 500s whenever --examples-dir
+    # points outside the process cwd.
+    allowed_paths = (
+        [str(arguments.examples_dir)] if arguments.examples_dir is not None else []
+    )
+    launch_demo(
+        demo,
+        server_name=arguments.host,
+        server_port=arguments.port,
+        inbrowser=not arguments.no_browser,
+        show_error=True,
+        max_file_size=_SERVE_MAX_FILE_SIZE,
+        allowed_paths=allowed_paths,
+        quiet=True,
+        prevent_thread_lock=True,
+    )
+    print(ui_text.SERVE_TERMINAL_BANNER)
+    print(
+        ui_text.SERVE_TERMINAL_URL.format(
+            url=demo.local_url, seconds=f"{load_seconds:.1f}"
+        )
+    )
+    print(ui_text.SERVE_TERMINAL_OFFLINE)
+    print(ui_text.SERVE_TERMINAL_STOP)
+    demo.block_thread()
+    # Gradio's shutdown sweep leaves cached example copies and empty hash
+    # directories behind; the dedicated temp dir holds nothing else, so
+    # removing it whole finishes the zero-persistence contract.
+    shutil.rmtree(serve_temp_dir, ignore_errors=True)
     return 0
 
 

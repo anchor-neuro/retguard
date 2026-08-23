@@ -16,7 +16,9 @@ from retguard.calibrate import (
     sigmoid,
     softmax,
 )
+from retguard.cam import HeadWeights, cam_heatmap, pooled_gradient
 from retguard.constants import (
+    CAM_SPATIAL_NODE,
     DR_TEMPERATURE,
     DR_THRESHOLD,
     FEATURE_DIM,
@@ -102,7 +104,7 @@ class Predictor:
             )
         self.module = module
         self.threshold = _MODULE_THRESHOLDS[module]
-        self._session = _load_session(module, onnx_path)
+        self._session, self._cam_head = _load_session(module, onnx_path)
         self._gate = MahalanobisGate.from_npz(ood_path)
         self._calibrator = (
             VennAbersCalibrator.from_npz(venn_abers_path)
@@ -114,6 +116,7 @@ class Predictor:
         self,
         image: np.ndarray | str | Path,
         threshold: float | None = None,
+        tta: bool = True,
     ) -> PredictionResult:
         """Run the module's deployed pipeline on one image.
 
@@ -122,17 +125,60 @@ class Predictor:
             threshold: Decision threshold. Defaults to the module's
                 pre-specified value (dr 0.204983, glaucoma 0.044776,
                 oct 0.70; paper section 2.4).
+            tta: Average logits over the module's TTA views (8 fundus, 2 OCT;
+                paper section 2.3). ``False`` runs the identity view only - a
+                deviation from the published protocol, since calibration was
+                fitted on TTA-averaged logits. The OOD score uses the identity
+                view in both modes.
 
         Returns:
             The :class:`PredictionResult` for the image.
         """
+        result, _ = self._predict_core(image, threshold, tta, want_cam=False)
+        return result
+
+    def predict_with_cam(
+        self,
+        image: np.ndarray | str | Path,
+        threshold: float | None = None,
+        tta: bool = True,
+    ) -> tuple[PredictionResult, np.ndarray]:
+        """Run predict and return the exact Grad-CAM heatmap of the identity view.
+
+        Args:
+            image: RGB ``(H, W, 3)`` uint8 array, or a path to an image file.
+            threshold: Decision threshold. Defaults to the module's
+                pre-specified value (dr 0.204983, glaucoma 0.044776,
+                oct 0.70; paper section 2.4).
+            tta: Average logits over the module's TTA views; see :meth:`predict`.
+                The heatmap is identity-view in both modes.
+
+        Returns:
+            The PredictionResult and a float32 (INPUT_SIZE, INPUT_SIZE) heatmap in
+            [0, 1], computed at the last conv layer via the closed-form head
+            gradient and bilinearly upsampled. For oct the map attributes the
+            predicted class's logit (pre-softmax).
+        """
+        result, heatmap = self._predict_core(image, threshold, tta, want_cam=True)
+        assert heatmap is not None
+        return result, heatmap
+
+    def _predict_core(
+        self,
+        image: np.ndarray | str | Path,
+        threshold: float | None,
+        tta: bool,
+        want_cam: bool,
+    ) -> tuple[PredictionResult, np.ndarray | None]:
         if isinstance(image, (str, Path)):
             image = load_image(image)
         if threshold is None:
             threshold = self.threshold
         tensor = _MODULE_PREPROCESS[self.module](image)
         views = _oct_views(tensor) if self.module == "oct" else _dihedral_views(tensor)
-        logits, features = self._run_views(views)
+        if not tta:
+            views = views[:1]
+        logits, features, spatial = self._run_views(views, want_cam=want_cam)
         # TTA contract: mean the raw logits across views, then apply exactly
         # one activation - never average probabilities (tta_utils.py of each
         # module; the code averages logits even where docstrings say otherwise).
@@ -163,7 +209,7 @@ class Predictor:
             )
             venn_abers_interval = (p0, p1)
 
-        return PredictionResult(
+        result = PredictionResult(
             module=self.module,
             probability=probability,
             decision=bool(probability >= threshold),
@@ -173,6 +219,16 @@ class Predictor:
             ood_score=ood_score,
             ood_flagged=ood_flagged,
         )
+        if not want_cam:
+            return result, None
+        assert spatial is not None
+        # Fundus heads are single-logit (class 0); OCT attributes the predicted
+        # class's pre-softmax logit, standard Grad-CAM practice (V11_BLUEPRINT §3).
+        class_index = (
+            int(np.argmax(mean_logit)) if self.module == "oct" else 0
+        )
+        gradient = pooled_gradient(features[0], self._cam_head, class_index)
+        return result, cam_heatmap(spatial[0], gradient)
 
     def predict_batch(
         self,
@@ -191,13 +247,15 @@ class Predictor:
         """
         return [self.predict(image, threshold=threshold) for image in images]
 
-    def _run_views(self, views: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        """Run all TTA views in one batch; return per-view logits and features."""
-        outputs = self._session.run(
-            ["logit", GAP_OUTPUT_NODE[self.module]],
-            {ONNX_INPUT_NAME: views},
-        )
-        return outputs[0], outputs[1]
+    def _run_views(
+        self, views: np.ndarray, want_cam: bool = False
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray | None]:
+        """Run all TTA views in one batch; return logits, features, spatial map."""
+        requested = ["logit", GAP_OUTPUT_NODE[self.module]]
+        if want_cam:
+            requested.append(CAM_SPATIAL_NODE[self.module])
+        outputs = self._session.run(requested, {ONNX_INPUT_NAME: views})
+        return outputs[0], outputs[1], outputs[2] if want_cam else None
 
 
 def load(module: str, weights_dir: str | Path | None = None) -> Predictor:
@@ -232,33 +290,45 @@ def load(module: str, weights_dir: str | Path | None = None) -> Predictor:
     )
 
 
-def _load_session(module: str, onnx_path: str | Path) -> onnxruntime.InferenceSession:
-    """Build a CPU session with the post-GAP feature tensor exposed.
+def _load_session(
+    module: str, onnx_path: str | Path
+) -> tuple[onnxruntime.InferenceSession, HeadWeights]:
+    """Build a CPU session with the feature and spatial tensors exposed.
 
     The shipped graphs output only the head tensors; the OOD gate needs the
-    1,280-d post-GAP features. Appending the named internal tensor to
-    ``graph.output`` in memory exposes them without re-exporting, so the
-    shipped bytes (and their checksums) are untouched (REPO_BLUEPRINT
-    section 3.3).
+    1,280-d post-GAP features and Grad-CAM needs the pre-GAP spatial map.
+    Appending the named internal tensors to ``graph.output`` in memory exposes
+    them without re-exporting, so the shipped bytes (and their checksums) are
+    untouched (REPO_BLUEPRINT section 3.3). The head weights are extracted
+    from the same loaded proto - zero extra file reads.
     """
     model = onnx.load(str(onnx_path))
     gap_name = GAP_OUTPUT_NODE[module]
+    spatial_name = CAM_SPATIAL_NODE[module]
     produced = {
         tensor_name for node in model.graph.node for tensor_name in node.output
     }
-    if gap_name not in produced:
-        raise RuntimeError(
-            f"Feature tensor {gap_name!r} not found in {onnx_path}; the model "
-            "file does not match this package version. Re-download with --force."
-        )
+    for tensor_name in (gap_name, spatial_name):
+        if tensor_name not in produced:
+            raise RuntimeError(
+                f"Feature tensor {tensor_name!r} not found in {onnx_path}; the model "
+                "file does not match this package version. Re-download with --force."
+            )
     model.graph.output.append(
         onnx.helper.make_tensor_value_info(
             gap_name, onnx.TensorProto.FLOAT, ["batch_size", FEATURE_DIM]
         )
     )
-    return onnxruntime.InferenceSession(
+    model.graph.output.append(
+        onnx.helper.make_tensor_value_info(
+            spatial_name, onnx.TensorProto.FLOAT, ["batch_size", FEATURE_DIM, "h", "w"]
+        )
+    )
+    head = HeadWeights.from_model(model, module)
+    session = onnxruntime.InferenceSession(
         model.SerializeToString(), providers=["CPUExecutionProvider"]
     )
+    return session, head
 
 
 def _dihedral_views(tensor: np.ndarray) -> np.ndarray:

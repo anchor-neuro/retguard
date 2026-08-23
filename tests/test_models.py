@@ -12,7 +12,12 @@ from conftest import make_synthetic_fundus, make_synthetic_oct
 
 from retguard import cli
 from retguard.calibrate import sigmoid, softmax
-from retguard.constants import FEATURE_DIM, MODULE_OUTPUT_NAMES, ONNX_INPUT_NAME
+from retguard.constants import (
+    FEATURE_DIM,
+    GAP_OUTPUT_NODE,
+    MODULE_OUTPUT_NAMES,
+    ONNX_INPUT_NAME,
+)
 from retguard.predictor import Predictor, _load_session
 from retguard.preprocess import preprocess_dr, preprocess_oct
 from retguard.weights import artifact_paths
@@ -96,10 +101,10 @@ def test_feature_tap_shape_and_cross_session_determinism(
 ) -> None:
     predictor = _predictor(module, request)
     batch = _input_batch(module)
-    feature_name = predictor._session.get_outputs()[-1].name
+    feature_name = GAP_OUTPUT_NODE[module]
     (features_first,) = predictor._session.run([feature_name], {ONNX_INPUT_NAME: batch})
     assert features_first.shape == (2, FEATURE_DIM)
-    fresh_session = _load_session(module, artifact_paths(module, weights_dir)["onnx"])
+    fresh_session, _ = _load_session(module, artifact_paths(module, weights_dir)["onnx"])
     (features_second,) = fresh_session.run([feature_name], {ONNX_INPUT_NAME: batch})
     np.testing.assert_array_equal(features_first, features_second)
 

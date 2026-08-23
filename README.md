@@ -35,7 +35,7 @@ Reported with the same prominence as the results above, because they define wher
 ## Installation
 
 ```
-pip install git+https://github.com/anchor-neuro/retguard
+pip install "git+https://github.com/anchor-neuro/retguard@v1.1.0"
 retguard download --module all
 ```
 
@@ -62,6 +62,17 @@ retguard predict --module oct oct_bscan.jpeg --json
 
 Runnable scripts for both modalities are in [`examples/`](examples/).
 
+## Local demo
+
+```
+pip install "retguard[ui] @ git+https://github.com/anchor-neuro/retguard@v1.1.0"
+retguard serve
+```
+
+The browser UI runs each module on an uploaded image and renders the out-of-distribution status, the decision at the pre-specified threshold, the calibrated probability (with the Venn-Abers interval where the module deploys one), and a saliency heatmap. The demo is research-use only and fully offline; no image leaves the machine.
+
+The saliency view is exact Grad-CAM computed from the shipped ONNX graph (closed-form head gradient, identity view, last convolutional layer), verified against the torch reference pipeline at Spearman rank correlation 1.000000 on 15 image/module pairs. It is an attribution map, not clinical localization and not clinical evidence.
+
 ## Model weights
 
 | Module | Release asset | Size (bytes) | SHA-256 of the model file |
@@ -71,6 +82,10 @@ Runnable scripts for both modalities are in [`examples/`](examples/).
 | oct | `retguard-oct-v1.0.0.zip` | 204,678,963 | `retguard_oct_v1.0.0.onnx`: `5ebd2e814a718edca922c26f5bdce380c6b38506f923103a8cb3362b67fb75f3`; `retguard_oct_v1.0.0.onnx.data`: `88d6c4d6803d3201b182eeb528b9ab08f2641de2b1d1ef672c807f9ecda5243c` |
 
 Each zip additionally contains the module's OOD-gate `.npz`, the Venn-Abers calibrator `.npz` where the module deploys one (glaucoma, oct), `LICENSE.txt`, and the module's model card. Weights are distributed via the [v1.0.0 release](https://github.com/anchor-neuro/retguard/releases/tag/v1.0.0), never via the git tree. SHA-256 digests for every zip and member file are published in the release's `SHA256SUMS.txt` and embedded in `retguard/weights.py`; `retguard download` verifies them automatically, and `retguard verify` re-checks an existing installation.
+
+## Hugging Face
+
+The release weights are mirrored at [huggingface.co/anchor-neuro/retguard](https://huggingface.co/anchor-neuro/retguard) — the same files and SHA-256 digests as the GitHub release, in one repository with `dr/`, `glaucoma/`, and `oct/` subfolders. A hosted demo Space runs the same interface as `retguard serve` and is listed on the mirror page.
 
 ## Model cards
 

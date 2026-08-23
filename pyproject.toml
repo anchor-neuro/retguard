@@ -18,6 +18,9 @@ dependencies = [
     "onnx>=1.15,<2",
 ]
 
+[project.optional-dependencies]
+ui = ["gradio>=6.25,<7"]
+
 [project.urls]
 Repository = "https://github.com/anchor-neuro/retguard"
 
