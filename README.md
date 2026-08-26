@@ -1,14 +1,14 @@
 # RETGUARD
 
-Calibrated, out-of-distribution-aware retinal screening models — referable diabetic retinopathy and glaucoma from fundus photographs, AMD/DME from OCT B-scans — released as ONNX exports (per-module export-verification status is disclosed in the model cards) with the full candidate deployment-safety stack: temperature/Venn-Abers calibration, a Mahalanobis OOD gate, and pre-specified referral thresholds.
+Calibrated, out-of-distribution-aware retinal research models — referable diabetic retinopathy and glaucoma from fundus photographs, AMD/DME from OCT B-scans — released as ONNX exports (per-module export-verification status is disclosed in the model cards) with experimental calibration and monitoring components: temperature/Venn-Abers calibration, a Mahalanobis OOD flag, and pre-specified decision thresholds. These components do not establish clinical safety. The OCT Boolean decision is AMD-only and is not a DME-inclusive referral decision.
 
 [![License](https://img.shields.io/badge/license-PolyForm%20NC%201.0.0%20%2B%20CC%20BY--NC%204.0-lightgrey)](LICENSE.md)
 [![Python](https://img.shields.io/badge/python-%E2%89%A53.10-blue)](pyproject.toml)
 [![CI](https://github.com/anchor-neuro/retguard/actions/workflows/ci.yml/badge.svg)](https://github.com/anchor-neuro/retguard/actions/workflows/ci.yml)
 
-Preprint (medRxiv, in submission — see [Citation](#citation)) · [Model cards](docs/) · [Weights (Releases)](https://github.com/anchor-neuro/retguard/releases) · [Commercial licensing](COMMERCIAL-LICENSE.md)
+Manuscript in preparation — see [Citation](#citation) · [Model cards](docs/) · [Weights (v1.0.0 release)](https://github.com/anchor-neuro/retguard/releases/tag/v1.0.0) · [Commercial licensing](COMMERCIAL-LICENSE.md)
 
-![RETGUARD system overview: three per-disease classifiers sharing one deployment-safety stack](figures/F1_system_overview.png)
+![RETGUARD system overview: three research classifiers with experimental calibration and monitoring components](figures/F1_system_overview.png)
 
 ## Results
 
@@ -16,7 +16,7 @@ Preprint (medRxiv, in submission — see [Citation](#citation)) · [Model cards]
 |---|---|---|---|
 | dr | Fundus | Referable diabetic retinopathy | Messidor-2 (n=1,744, zero-shot): AUC 0.9691 (95% CI 0.9595–0.9772); sensitivity 97.16% (95.45–98.51%), specificity 76.07% (73.71–78.32%) at the pre-specified threshold |
 | glaucoma | Fundus | Referable glaucoma | REFUGE-Val (n=400, zero-shot): AUC 0.9278 (0.8642–0.9763); ORIGA (n=650, zero-shot): AUC 0.8729 (0.8399–0.9028), both under minimal preprocessing |
-| oct | OCT B-scan | Normal / AMD / DME | Duke Srinivasan (n=3,231, zero-shot): AMD-vs-rest AUC 0.9883 (0.9845–0.9915); OCTID (n=261, zero-shot; 55 AMD positives, no DME cases): AUC 0.9999 (0.9995–1.0000) |
+| oct | OCT B-scan | Normal / AMD / DME | OCTID (n=261, external; 55 AMD positives, no DME cases): AMD-vs-rest AUC 0.9999 (0.9995–1.0000). The archived Duke performance claim was withdrawn after the released-model reproduction gate failed. |
 
 CIs are bootstrap percentile intervals. Full evaluation — internal, dataset-family-holdout, and failure-mode results — is in the paper and the [model cards](docs/).
 
@@ -27,15 +27,15 @@ Reported with the same prominence as the results above, because they define wher
 - The glaucoma module fails on optic-disc crops: on RIM-ONE DL it performs below chance (AUC 0.3667). It is a full-fundus classifier; cropped inputs are out of intended use.
 - Cropped fields of view degrade it: ACRIMA AUC 0.7185 (minimal preprocessing) / 0.6049 (training-domain preprocessing).
 - The OCT module's "Normal" output means "no AMD or DME detected", not "healthy": in a 354-image confounder test (epiretinal membrane, retinal artery/vein occlusion, vitreomacular interface disease), 347 of 354 non-target pathologies were output as Normal.
-- Zero-shot external DME evidence rests on one dataset (Duke), where B-scan-level DME sensitivity was 77.38%.
+- No validated strictly external DME performance estimate remains. The archived Duke DME and AMD results were withdrawn after none of six documented released-model preprocessing/TTA/score variants reproduced the reported Duke AUC.
 - The DR module's calibration exceeds the project's own 0.05 expected-calibration-error gate (calibration-set ECE 0.052537; 0.0811 on Messidor-2).
-- One glaucoma result (ORIGA under training-domain preprocessing, AUC 0.9988) exceeds every published figure and is reported as unconfirmed pending independent replication.
-- The DR module's ONNX export failed its logit-parity tolerance (maximum logit difference 0.002526 against a 0.001 threshold); probability parity passed at 0.000626, so the practical impact on threshold decisions is bounded, and the failure is disclosed in the DR model card.
+- One glaucoma result (ORIGA under training-domain preprocessing, AUC 0.9988) is far above the comparative values identified in the manuscript's literature search and remains unconfirmed pending independent replication.
+- The DR module's ONNX export failed its prespecified logit-parity tolerance (maximum logit difference 0.002526 against a 0.001 threshold) in a six-sample check. The observed maximum probability difference was 0.000626, but that small check does not establish a global bound on decision impact; the released export remains unverified against the failed logit criterion.
 
 ## Installation
 
 ```
-pip install "git+https://github.com/anchor-neuro/retguard@v1.1.0"
+pip install "git+https://github.com/anchor-neuro/retguard@v1.1.1"
 retguard download --module all
 ```
 
@@ -65,7 +65,7 @@ Runnable scripts for both modalities are in [`examples/`](examples/).
 ## Local demo
 
 ```
-pip install "retguard[ui] @ git+https://github.com/anchor-neuro/retguard@v1.1.0"
+pip install "retguard[ui] @ git+https://github.com/anchor-neuro/retguard@v1.1.1"
 retguard serve
 ```
 
@@ -81,11 +81,11 @@ The saliency view is exact Grad-CAM computed from the shipped ONNX graph (closed
 | glaucoma | `retguard-glaucoma-v1.0.0.zip` | 204,819,003 | `retguard_glaucoma_v1.0.0.onnx`: `b5686229ecc9050caddf61a66686e77e3e5cb4085425cca881078acb586cbb7b` |
 | oct | `retguard-oct-v1.0.0.zip` | 204,678,963 | `retguard_oct_v1.0.0.onnx`: `5ebd2e814a718edca922c26f5bdce380c6b38506f923103a8cb3362b67fb75f3`; `retguard_oct_v1.0.0.onnx.data`: `88d6c4d6803d3201b182eeb528b9ab08f2641de2b1d1ef672c807f9ecda5243c` |
 
-Each zip additionally contains the module's OOD-gate `.npz`, the Venn-Abers calibrator `.npz` where the module deploys one (glaucoma, oct), `LICENSE.txt`, and the module's model card. Weights are distributed via the [v1.0.0 release](https://github.com/anchor-neuro/retguard/releases/tag/v1.0.0), never via the git tree. SHA-256 digests for every zip and member file are published in the release's `SHA256SUMS.txt` and embedded in `retguard/weights.py`; `retguard download` verifies them automatically, and `retguard verify` re-checks an existing installation.
+Each zip additionally contains the module's OOD-gate `.npz`, the Venn-Abers calibrator `.npz` where the module deploys one (glaucoma, oct), `LICENSE.txt`, and the module's model card. Weights are distributed via the [v1.0.0 release](https://github.com/anchor-neuro/retguard/releases/tag/v1.0.0), never via the git tree. SHA-256 digests for every zip and member file are published in the release's `SHA256SUMS.txt` and embedded in `retguard/weights.py`; `retguard download` verifies them automatically, and `retguard verify` re-checks an existing installation. The v1.1.1 source/UI/documentation release has no model assets and uses these unchanged v1.0.0 archives.
 
-## Hugging Face
+## Distribution status
 
-The release weights are mirrored at [huggingface.co/anchor-neuro/retguard](https://huggingface.co/anchor-neuro/retguard) — the same files and SHA-256 digests as the GitHub release, in one repository with `dr/`, `glaucoma/`, and `oct/` subfolders. A hosted demo Space runs the same interface as `retguard serve` and is listed on the mirror page.
+The authenticated GitHub v1.0.0 release is currently the only verified public weight distribution. A Hugging Face mirror and hosted Space are planned but must not be treated as public until their anonymous endpoints are verified.
 
 ## Model cards
 
@@ -93,11 +93,11 @@ The release weights are mirrored at [huggingface.co/anchor-neuro/retguard](https
 - [`docs/MODEL_CARD_glaucoma.md`](docs/MODEL_CARD_glaucoma.md) — referable glaucoma from full fundus photographs.
 - [`docs/MODEL_CARD_oct.md`](docs/MODEL_CARD_oct.md) — three-class Normal/AMD/DME from OCT B-scans.
 
-The cards document every known limitation and every value the independent audit could not trace to an artifact.
+The cards document every known limitation and every value the internal structured verification could not trace to an artifact.
 
 ## Intended use and limitations
 
-RETGUARD is a research artifact. It is not a medical device, has no regulatory clearance in any jurisdiction, and must not be used for clinical diagnosis, screening, triage, or patient management. All published evidence is retrospective and computed on public research datasets; no prospective validation and no validation on a target camera or OCT device has been performed. The intended-use sections of the model cards govern.
+RETGUARD is a research artifact. It is not a medical device, has no regulatory clearance in any jurisdiction, and must not be used for clinical diagnosis, screening, triage, or patient management. All reported evidence is retrospective and computed on research datasets with varied access conditions; no prospective validation and no validation on a target camera or OCT device has been performed. The intended-use sections of the model cards govern.
 
 ## License
 
@@ -109,18 +109,17 @@ RETGUARD is a research artifact. It is not a medical device, has no regulatory c
 
 This repository is source-available for research use, released under a research-use (noncommercial) license structure. A 90-day internal-evaluation permission for organizations considering a commercial license is included in [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md).
 
-The released weights were trained on public research datasets whose terms permit research use; several do not permit commercial redistribution. Any commercial deployment requires retraining on appropriately licensed data. Per-dataset provenance and license status are given in the paper's Methods and Data Availability sections.
+The released weights were trained on research datasets obtained through access routes and terms available to the developer at the time. Access conditions vary, and several reviewed sources do not expressly establish redistribution rights for learned weights or commercial use. Any commercial deployment requires rights-holder review or retraining on appropriately licensed data. Per-dataset provenance, access category, and verified rights are given in the manuscript's supplementary appendix.
 
 ## Citation
 
 ```bibtex
-@article{aboelmaaty2026retguard,
+@misc{aboelmaaty2026retguard,
   author  = {Aboelmaaty, Sameh},
-  title   = {{RETGUARD}: Calibrated, Out-of-Distribution-Aware Deep Learning for
-             Multi-Disease Retinal Screening from Fundus Photography and Optical
-             Coherence Tomography, with External Validation and Explicit
-             Failure-Mode Reporting},
-  journal = {medRxiv},
+  title   = {{RETGUARD}: Retrospective Multi-Dataset Development and External
+             Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus
+             Photographs and OCT B-Scans},
+  note    = {Manuscript in preparation},
   year    = {2026}
 }
 ```
@@ -129,7 +128,7 @@ Or use GitHub's "Cite this repository" button, which reads [CITATION.cff](CITATI
 
 ## Acknowledgements and contact
 
-This work builds on public datasets: EyePACS, DDR, APTOS, IDRiD, DeepDRiD, Messidor-2, AIROGS, G1020, REFUGE, ORIGA, DRISHTI-GS, FIVES, RIM-ONE DL, ACRIMA, Kermany, Noor, OCTDL, Duke/Srinivasan, and OCTID. Each dataset's terms are credited in the paper.
+This work builds on research datasets with varied self-service, account-gated, challenge, and request-based access conditions: EyePACS, DDR, APTOS, IDRiD, DeepDRiD, Messidor-2, AIROGS, G1020, REFUGE, ORIGA, DRISHTI-GS, FIVES, RIM-ONE DL, ACRIMA, Kermany, Noor, OCTDL, Duke/Srinivasan, and OCTID. Each dataset's verified terms and unresolved rights are summarized in the manuscript appendix.
 
 Sameh Aboelmaaty — ghoneim2012@gmail.com — Anchor Neuro, Delaware, USA.
 

@@ -32,8 +32,9 @@ DR_THRESHOLD: Final = 0.204983
 
 # Glaucoma module: threshold from the glaucoma module's operating_point.json
 # ("threshold"; the source tree spells the directory "Glucoma").
-# Venn-Abers is the deployed calibrator; the fitted temperature is the recorded
-# fallback used only if the stored calibrator is absent (paper section 2.4).
+# Venn-Abers is the deployed calibrator. The fitted temperature is retained as
+# an evaluation artifact, but packaged inference requires a valid Venn-Abers
+# artifact and fails closed if it is missing or invalid.
 GLAUCOMA_TEMPERATURE: Final = 0.94653
 GLAUCOMA_THRESHOLD: Final = 0.044776
 

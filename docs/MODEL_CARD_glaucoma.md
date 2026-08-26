@@ -1,6 +1,6 @@
 # Model Card — RETGUARD Glaucoma Module (Fundus)
 
-**Model card version:** 1.0 | **Date:** 2026-08-22 | **Status:** Research software. No regulatory clearance.
+**Model card version:** 1.1 | **Date:** 2026-08-27 | **Status:** Research software. No regulatory clearance.
 
 > **This is research software. It is not a medical device. It has no FDA clearance, no CE mark, and no regulatory authorization in any jurisdiction. It must not be used to make or inform any clinical decision about any patient.**
 >
@@ -8,7 +8,7 @@
 
 This card follows the Model Cards for Model Reporting framework (Mitchell M, Wu S, Zaldivar A, et al. Model Cards for Model Reporting. *Proceedings of the Conference on Fairness, Accountability, and Transparency (FAT\* '19)*. 2019:220-229. DOI: 10.1145/3287560.3287596).
 
-Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2, 2026-08-22) or from the independent verification manifest `manifest_Glaucoma.json` (generated 2026-08-22). Nothing is estimated, and nothing is rounded beyond the precision the source artifact stores. Values the audit could not trace to an artifact are labeled **report-stated** wherever they appear.
+Every number in this card is copied from the RETGUARD manuscript evidence base or from the internal structured-verification manifest `manifest_Glaucoma.json` (generated 2026-08-22). Nothing is estimated, and nothing is rounded beyond the precision the source artifact stores. Values that verification could not trace to an artifact are labeled **report-stated** wherever they appear.
 
 ---
 
@@ -17,14 +17,14 @@ Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2,
 | Item | Value |
 |---|---|
 | Developer | Sameh Aboelmaaty, Anchor Neuro, Delaware, USA |
-| Model card date | 2026-08-22 |
+| Model card date | 2026-08-27 |
 | Module version | RetGuard v6 Binary Glaucoma Classifier, EfficientNetV2-M, champion checkpoint epoch 26 (benchmark artifacts dated 2026-03-10) |
 | Model type | Binary image classifier (referable glaucoma vs. non-referable) |
 | Architecture | EfficientNetV2-M, pretrained on ImageNet-21k and fine-tuned on ImageNet-1k; export metadata records only "efficientnetv2_m + full fine-tune (eval mode)" |
 | Input | Single color **full fundus photograph**, 480 x 480 x 3 |
 | Trainable parameters | 53,186,549, all trainable (pipeline log; paper Section 2.3). The module report is internally contradictory on this point (53.2M in one section, 54.1M in another); the pipeline-log value governs |
 | Output | Calibrated probability of referable glaucoma; binary decision at the fixed threshold 0.044776 |
-| Calibration | Temperature scaling (temperature 0.94653) plus an Inductive Venn-Abers Predictor (IVAP); deployment calibration flag is `venn_abers`, with temperature scaling as fallback |
+| Calibration | Inductive Venn-Abers Predictor (IVAP) in packaged inference; a fitted temperature (0.94653) is retained as an evaluation artifact but is not a runtime fallback. Initialization fails closed without a valid Venn-Abers artifact |
 | Test-time augmentation | 8 views (D4: 4 rotations x 2 flips) |
 | Out-of-distribution gate | Mahalanobis-distance detector on penultimate features, 97th-percentile threshold 48.3972; advisory only |
 | Export format | ONNX, opset 17, dynamic batch, input 480; TensorRT precision field FP16; file size 212,474,067 bytes measured on disk |
@@ -34,9 +34,9 @@ Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2,
 | License — code | PolyForm Noncommercial 1.0.0 (see LICENSE.md) |
 | Contact | ghoneim2012@gmail.com |
 | Repository | https://github.com/anchor-neuro/retguard |
-| Weights mirror | https://huggingface.co/anchor-neuro/retguard |
+| Public weights | GitHub release `v1.0.0`; no public Hugging Face mirror is currently verified |
 
-**Paper citation.** Aboelmaaty S. RETGUARD: Calibrated, Out-of-Distribution-Aware Deep Learning for Multi-Disease Retinal Screening from Fundus Photography and Optical Coherence Tomography, with External Validation and Explicit Failure-Mode Reporting. Manuscript v1.2, 2026-08-22. Anchor Neuro, Delaware, USA. Submission-ready draft (medRxiv).
+**Paper citation.** Aboelmaaty S. RETGUARD: Retrospective Multi-Dataset Development and External Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus Photographs and OCT B-Scans. Revised manuscript in preparation, 2026-08-27. Anchor Neuro, Delaware, USA.
 
 **Required input preprocessing (recorded in export metadata, deployment-relevant, order is load-bearing):**
 
@@ -51,13 +51,13 @@ The export metadata records `ben_graham_required_upstream: true` and `clahe_requ
 
 **Verified training configuration:** 34 epochs run; champion epoch 26 with validation AUC 0.9834748584748585 (maximum across all 34 epochs); per-epoch losses, AUC, sensitivity, specificity, F1, Brier, threshold, backbone learning rate, gradient-norm mean, and sampling statistics are recorded. Epoch-1 backbone learning rate 5.00374531835206e-05.
 
-**Configuration items not recorded in any evaluation artifact, subsequently recovered from the released source code by an independent audit (paper Table 2, cells marked *(src)*):** AdamW with backbone learning rate 1e-4 and head 3e-4 (resolving the module reports' 3e-4-vs-1e-4 contradiction), weight decay 1e-4, linear warmup then cosine decay, focal loss (gamma 2.0) with a MixUp mixture, batch size 16 with 4-step gradient accumulation, and BF16 precision. The parameter count is in the pipeline log (above); the bootstrap protocol is specified in paper Section 2.7 (1,000 resamples for per-dataset metric CIs, 2,000 for operating-point CIs). The GPU hardware of the executed run remains unrecorded.
+**Configuration items not recorded in any evaluation artifact, subsequently recovered from the released source code during internal structured verification (paper Table 2, cells marked *(src)*):** AdamW with backbone learning rate 1e-4 and head 3e-4 (resolving the module reports' 3e-4-vs-1e-4 contradiction), weight decay 1e-4, linear warmup then cosine decay, focal loss (gamma 2.0) with a MixUp mixture, batch size 16 with 4-step gradient accumulation, and BF16 precision. The parameter count is in the pipeline log (above); the bootstrap protocol is specified in paper Section 2.7 (1,000 resamples for per-dataset metric CIs, 2,000 for operating-point CIs). The GPU hardware of the executed run remains unrecorded.
 
 ---
 
 ## 2. Intended use
 
-**Primary intended use.** Research and methodological evaluation only: retrospective benchmarking of referable-glaucoma classification from full fundus photographs, calibration behavior, out-of-distribution flagging, preprocessing-domain sensitivity, and operating-point portability on public datasets.
+**Primary intended use.** Research and methodological evaluation only: retrospective benchmarking of referable-glaucoma classification from full fundus photographs, calibration behavior, out-of-distribution flagging, preprocessing-domain sensitivity, and operating-point portability on research datasets.
 
 **Primary intended users.** Machine-learning researchers and clinical-AI evaluators working with de-identified, publicly available retinal image datasets.
 
@@ -154,16 +154,16 @@ Whether the 155-image evaluation split itself passed through label cleaning is n
 
 | Dataset | License / access terms |
 |---|---|
-| AIROGS | Challenge terms |
-| G1020 | Research use |
-| DRISHTI-GS | Research use |
-| FIVES | Research use |
-| REFUGE | Challenge terms |
-| ORIGA | Research use |
-| RIM-ONE DL | Research use |
-| ACRIMA | Research use |
+| AIROGS | Approval-gated access; CC BY-NC-ND 4.0; learned-weight redistribution not established |
+| G1020 | Research-benchmark intent; current authoritative access route and dataset license not verified |
+| DRISHTI-GS | Research/citation intent; no dataset license verified |
+| FIVES | CC BY 4.0 |
+| REFUGE | Challenge registration; no dataset license verified |
+| ORIGA | Request-based access in the primary paper; no dataset license verified |
+| RIM-ONE DL | Research/education only; redistribution and unauthorized commercial use prohibited |
+| ACRIMA | CC BY 4.0 |
 
-None of these access terms was independently verified against the source repositories by the audit. **Commercial use of a model trained on these datasets is not established as permitted and must be reviewed against each dataset's terms before any such use.**
+These summaries were rechecked against the identified source pages on 2026-08-27. Public discoverability was not treated as a license. **Learned-weight redistribution and commercial use are not established as permitted for several contributing datasets and require rights-holder review.**
 
 ---
 
@@ -240,7 +240,7 @@ Additional stored calibration values, Ben Graham protocol: REFUGE-Val Brier 0.05
 
 ### 7.3 The ORIGA 0.9988 result is unconfirmed pending replication
 
-**The Ben Graham ORIGA AUC of 0.9988 exceeds every published ORIGA classification figure the manuscript could verify.** The trained-on-ORIGA ceiling in the literature is 0.831-0.851, and well-executed zero-shot models report 0.85-0.854. This value is reported here as stored in the artifacts and is **treated as unconfirmed until independently replicated**. Two possibilities cannot be formally excluded:
+**The Ben Graham ORIGA AUC of 0.9988 is far above the comparative ORIGA values identified in the manuscript's literature search.** The reviewed trained-on-ORIGA values were 0.831-0.851, and the reviewed zero-shot values were 0.85-0.854. The search is not an exhaustive proof of a literature maximum. This value is reported here as stored in the artifacts and is **treated as unconfirmed until independently replicated**. Two possibilities cannot be formally excluded:
 
 1. **Undetected training exposure.** The training corpus is now itemized from the execution log (Section 3) and ORIGA is not among the nine pooled datasets, but no image-hash overlap check has been run, so undetected duplication of ORIGA or related Singapore Malay Eye Study imagery within another pooled source cannot be formally excluded.
 2. **An undetected evaluation artifact** in the benchmark pipeline.
@@ -300,7 +300,7 @@ The automated release gate passed (`kill_gate_passed = true`). **The numeric gat
 | Calibrator types | Temperature scaling, plus an Inductive Venn-Abers Predictor (IVAP, Vovk & Petej 2014) |
 | Temperature | 0.94653 |
 | Fitting partition | 2,651 AIROGS images |
-| Deployment calibration flag | `venn_abers` (primary), `temperature_scaling` (fallback) |
+| Packaged calibration behavior | `venn_abers` required; initialization fails closed if the artifact is missing, malformed, or incompatible. `temperature_scaling` is an evaluation artifact, not a runtime fallback |
 | ECE bins | 15 (temperature-scaling block) |
 
 **In-sample assessment** — computed on the same 2,651-image partition used to fit the calibrators, and therefore **optimistically biased by construction**:
@@ -403,7 +403,7 @@ Stated bluntly, and drawn from the manuscript's Limitations section and the glau
 
 3. **Near-chance result on the G1020 dataset-family holdout.** AUC **0.5896 (0.4792-0.6975)** in the evaluation pipeline and **0.5813 (0.4726-0.6846)** in an independent Ben Graham run. Sensitivity 0.4138 and 0.3793. Both near chance with wide CIs, on a small (n=155), label-noisy (initial data-quality score 0.6843657817109144; 23.5% flagged), distribution-shifted (28.39% OOD flag rate) split. The cause is unresolved.
 
-4. **The ORIGA 0.9988 Ben Graham result exceeds all published figures and is unconfirmed.** The trained-on-ORIGA literature ceiling is 0.831-0.851 and well-executed zero-shot models report 0.85-0.854. This result is reported as stored and treated as **unconfirmed pending independent replication**. Neither an undetected evaluation artifact nor undetected training exposure via the unrecorded auxiliary composition can be excluded.
+4. **The ORIGA 0.9988 Ben Graham result is an unusually high, unconfirmed secondary result.** It is far above the comparative ORIGA values identified in the manuscript's non-exhaustive literature search (0.831-0.851 for the reviewed trained-on-ORIGA results and 0.85-0.854 for the reviewed zero-shot results). It is reported as stored and treated as **unconfirmed pending independent replication**. Neither an undetected evaluation artifact nor undetected training exposure via the unrecorded auxiliary composition can be excluded.
 
 5. **DRISHTI-GS and FIVES are dataset-family holdouts, not strictly zero-shot.** Their train splits contributed auxiliary training data per the module report. Both reach a degenerate AUC 1.0000 under training-domain preprocessing with boundary-degenerate CIs [1.0000, 1.0000]. **These are not external validation and must never be cited as such.** A family-holdout dataset reaching exactly 1.0 is also consistent with the model recognizing sibling-split dataset statistics rather than with genuine generalization. DRISHTI-GS additionally has n=51 with only 13 negatives and 74.5% prevalence.
 
@@ -439,6 +439,6 @@ Stated bluntly, and drawn from the manuscript's Limitations section and the glau
 
 21. **No gradability or imageability pathway.** All benchmarks are curated and gradability-filtered. Prospective imageability is unmeasured. No mydriasis, field, or resolution input specification is defined.
 
-22. **Retrospective only.** Every result is retrospective and computed on curated public datasets. No prospective, intent-to-screen, or real-device validation exists. The generalization gap documented for this field — internal AUCs of 0.986-0.996 decaying to 0.923 on multiethnic external data and 0.823 on website-sourced images, and a single fixed model spanning AUC 0.769-0.987 across 13 external sources — should be assumed to apply here.
+22. **Retrospective only.** Every result is retrospective and computed on curated research datasets with varied access conditions. No prospective, intent-to-screen, or real-device validation exists. The generalization gap documented for this field — internal AUCs of 0.986-0.996 decaying to 0.923 on multiethnic external data and 0.823 on website-sourced images, and a single fixed model spanning AUC 0.769-0.987 across 13 external sources — should be assumed to apply here.
 
 23. **No regulatory status.** RETGUARD has no regulatory clearance, authorization, or certification anywhere. It is not a medical device.

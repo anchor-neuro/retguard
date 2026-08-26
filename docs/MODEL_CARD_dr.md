@@ -1,12 +1,12 @@
 # Model Card — RETGUARD Diabetic Retinopathy Module (Fundus)
 
-**Model card version:** 1.0 | **Date:** 2026-08-22 | **Status:** Research software. No regulatory clearance.
+**Model card version:** 1.1 | **Date:** 2026-08-27 | **Status:** Research software. No regulatory clearance.
 
 > **This is research software. It is not a medical device. It has no FDA clearance, no CE mark, and no regulatory authorization in any jurisdiction. It must not be used to make or inform any clinical decision about any patient.**
 
 This card follows the Model Cards for Model Reporting framework (Mitchell M, Wu S, Zaldivar A, et al. Model Cards for Model Reporting. *Proceedings of the Conference on Fairness, Accountability, and Transparency (FAT\* '19)*. 2019:220-229. DOI: 10.1145/3287560.3287596).
 
-Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2, 2026-08-22) or from the independent verification manifest `manifest_DR.json` (generated 2026-08-22). Nothing is estimated, and nothing is rounded beyond the precision the source artifact stores. Values the audit could not trace to an artifact are labeled **report-stated** wherever they appear.
+Every number in this card is copied from the RETGUARD manuscript evidence base or from the internal structured-verification manifest `manifest_DR.json` (generated 2026-08-22). Nothing is estimated, and nothing is rounded beyond the precision the source artifact stores. Values that verification could not trace to an artifact are labeled **report-stated** wherever they appear.
 
 ---
 
@@ -15,7 +15,7 @@ Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2,
 | Item | Value |
 |---|---|
 | Developer | Sameh Aboelmaaty, Anchor Neuro, Delaware, USA |
-| Model card date | 2026-08-22 |
+| Model card date | 2026-08-27 |
 | Module version | RETGUARD DR module, v6 (training pipeline run `pipeline_20260306_155744`, 2026-03-06) |
 | Model type | Binary image classifier (referable diabetic retinopathy vs. non-referable) |
 | Architecture | EfficientNetV2-M (`tf_efficientnetv2_m.in21k_ft_in1k`, timm), pretrained on ImageNet-21k and fine-tuned on ImageNet-1k |
@@ -32,13 +32,13 @@ Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2,
 | License — code | PolyForm Noncommercial 1.0.0 (see LICENSE.md) |
 | Contact | ghoneim2012@gmail.com |
 | Repository | https://github.com/anchor-neuro/retguard |
-| Weights mirror | https://huggingface.co/anchor-neuro/retguard |
+| Public weights | GitHub release `v1.0.0`; no public Hugging Face mirror is currently verified |
 
-**Paper citation.** Aboelmaaty S. RETGUARD: Calibrated, Out-of-Distribution-Aware Deep Learning for Multi-Disease Retinal Screening from Fundus Photography and Optical Coherence Tomography, with External Validation and Explicit Failure-Mode Reporting. Manuscript v1.2, 2026-08-22. Anchor Neuro, Delaware, USA. Submission-ready draft (medRxiv).
+**Paper citation.** Aboelmaaty S. RETGUARD: Retrospective Multi-Dataset Development and External Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus Photographs and OCT B-Scans. Revised manuscript in preparation, 2026-08-27. Anchor Neuro, Delaware, USA.
 
 **Verified training configuration** (from pipeline log and `history.csv`): loss — focal (gamma 2.0) on approximately 70% of batches, binary cross-entropy on approximately 30% MixUp batches; label smoothing epsilon 0.1 (targets 0 to 0.05, 1 to 0.95); precision BF16; drop-path 0.2; EMA decay 0.9998; maximum epochs 40, epochs run 25, best epoch 18 (best validation AUC 0.9444); early stopping patience 7, AUC-based, triggered at epoch 25; checkpoint policy — highest AUC with F1 >= 0.73.
 
-**Configuration items not recorded in any evaluation artifact, subsequently recovered from the released source code by an independent audit (paper Table 2, cells marked *(src)*):** AdamW (backbone learning rate 1e-4, head 3e-4; linear warmup then cosine decay), MixUp alpha 0.3 applied with probability 0.3, dropout 0.3, batch size 16 with 4-step gradient accumulation, classification head 1,280-256-1, and the 8-view D4 TTA composition.
+**Configuration items not recorded in any evaluation artifact, subsequently recovered from the released source code during internal structured verification (paper Table 2, cells marked *(src)*):** AdamW (backbone learning rate 1e-4, head 3e-4; linear warmup then cosine decay), MixUp alpha 0.3 applied with probability 0.3, dropout 0.3, batch size 16 with 4-step gradient accumulation, classification head 1,280-256-1, and the 8-view D4 TTA composition.
 
 ---
 
@@ -75,7 +75,7 @@ Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2,
 
 **Population represented in strictly external evaluation:** Messidor-2 — France, primary care, 2005-2010.
 
-**Known geographic and ethnic gaps.** Training and evaluation data derive predominantly from US, Chinese, Indian, and French cohorts. **African populations are essentially absent from both training and evaluation.** Performance in those populations is unknown, not merely unproven. No per-subgroup analysis by age, sex, ethnicity, or camera model was performed, because the public datasets used do not carry the necessary metadata in the artifacts audited.
+**Known geographic and ethnic gaps.** Training and evaluation data derive predominantly from US, Chinese, Indian, and French cohorts. **African populations are essentially absent from both training and evaluation.** Performance in those populations is unknown, not merely unproven. No per-subgroup analysis by age, sex, ethnicity, or camera model was performed, because the source research datasets do not carry the necessary metadata in the artifacts audited.
 
 **Device factors.** Camera model, field definition, image resolution, mydriasis status, and media clarity are not recorded per image in the audited artifacts and were not analyzed as factors. The OOD gate measures feature-space distance only; it is not a camera-compatibility test and not a gradability test.
 
@@ -93,7 +93,7 @@ Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2,
 | PPV, NPV, F1, and the full confusion matrix | Referral-workload interpretation; PPV and NPV are prevalence-dependent and are reported with the cohort prevalence stated |
 | Expected calibration error (ECE), maximum calibration error (MCE), Brier score | Calibration is a safety property: miscalibrated probabilities corrupt any fixed referral threshold. Reported separately for the calibrator's own fitting partition (in-sample, optimistically biased) and for held-out partitions |
 | OOD flag rate per dataset | Measures how often the advisory gate would route an input to human review. Reported as a result, never tuned |
-| Sight-threatening sensitivity | Sensitivity within the severe subset of referable disease. **Caveat: the grade boundary defining this subset is not recorded in the audited artifacts** |
+| Severe-or-proliferative-grade sensitivity | Sensitivity within ICDR grades 3-4; this artifact label was historically called "sight-threatening," but DME was not part of the subgroup definition |
 
 **Statistical protocol.** All CIs are bootstrap-based, of the percentile type, unstratified, with fixed seeds (verified from released source; paper Section 2.7). The operating-point threshold, sensitivity, and specificity CIs use 2,000 resamples (seed 42); every per-dataset AUC, sensitivity, and specificity CI uses 1,000 resamples (seeds 42, 43, and 44 respectively) — the 1,000-resample count falls short of the project's own 2,000-resample reporting convention and is disclosed as such (Section 12, item 12). ECE was computed with 15 bins where the bin count is recorded (the calibration block).
 
@@ -118,20 +118,20 @@ Every number in this card is copied verbatim from the RETGUARD manuscript (v1.2,
 
 **Label cleaning.** Confident learning (cleanlab) with an MLP probe on 1,280-dimensional backbone features and cross-validation was applied to EyePACS, DDR, and DeepDRiD before training; the APTOS train split was decontaminated. Per-dataset cleaning counts for the DR module are not separately stored in the audited artifacts. The label-quality rationale follows the Messidor-2 replication study, which attributed most of a 0.14-AUC gap primarily to label quality.
 
-**Case definition.** Referable DR was defined by dichotomizing the source datasets' severity grades. **The exact grade cutoff used by the label-preparation pipeline is not recorded in the audited artifacts**, nor is the grade boundary defining "sight-threatening" disease, nor whether DME forms part of the referable composite. These must be documented from the label-preparation code.
+**Case definition.** Released source reconstructs the binary endpoint as moderate-or-worse DR: ICDR grades 2, 3, and 4 are positive; grades 0 and 1 are negative. The stored subgroup historically labeled "sight-threatening" is grades 3 and 4 only. DME is not part of either definition; eight Messidor-2 images with grade 1 and adjudicated DME remain negative under this endpoint.
 
 **License and commercial-use status of the training and evaluation data:**
 
 | Dataset | License / access terms |
 |---|---|
-| EyePACS (Kaggle DR 2015) | Kaggle competition terms |
-| DDR | Research use (GitHub) |
-| APTOS 2019 | Kaggle competition terms |
-| IDRiD | CC BY 4.0 (per dataset paper) |
-| DeepDRiD | Challenge terms |
-| Messidor-2 | ADCIS research license |
+| EyePACS (Kaggle DR 2015) | Account and competition-term acceptance; no independent dataset license or learned-weight redistribution grant verified |
+| DDR | Public repository/research intent; no dataset-specific license verified |
+| APTOS 2019 | Account and competition-term acceptance; no independent dataset license or learned-weight redistribution grant verified |
+| IDRiD | CC BY 4.0 |
+| DeepDRiD | Public research repository; no dataset-specific license verified |
+| Messidor-2 | ADCIS research/education terms; image redistribution and unauthorized commercial use prohibited. Separate Google Brain adjudicated labels are CC0 |
 
-None of these access terms was independently verified against the source repositories by the audit. **Commercial use of a model trained on these datasets is not established as permitted and must be reviewed against each dataset's terms before any such use.**
+These summaries were rechecked against the identified source pages on 2026-08-27. Public discoverability was not treated as a license. **Learned-weight redistribution and commercial use are not established as permitted for several contributing datasets and require rights-holder review.**
 
 ---
 
@@ -152,7 +152,7 @@ Classification uses exactly the manuscript's terms. A dataset is **external (zer
 
 **Split verification.** `verification_report.json` records 5/5 checks passed, 0 overlapping images, and 0 overlapping patients, covering APTOS, Messidor-2, IDRiD, and DeepDRiD only. **No split-verification artifact covers the EyePACS or DDR train/validation/test partitions.** The external-evaluation artifact itself carries leakage warnings stating that IDRiD-Test and DeepDRiD-Val "were used in training — metrics may be inflated"; the split-verification artifact explains these as dataset-family warnings rather than image-level leakage, but the rows remain dataset-family holdouts and not external validation.
 
-**Provenance gap.** The provenance of the Messidor-2 referable-DR reference labels — which public grade set, whose grading protocol, whether DME was included, and who adjudicated the 4 ungradable exclusions — is not documented in the audited artifacts.
+**Messidor-2 label provenance.** The 1,748 ADCIS images were joined to Google Brain's `messidor_data.csv` adjudicated labels, graded by three retina specialists under the protocol reported by Krause et al. (2018). The public mirror CSV is byte-identical to that label table (SHA-256 `BB8BBD82EB4BFDDC8A0EB9AA45D84274D814E913534F8027F6A4FF0A310FDA72`). Grades 2/3/4 contain 347/75/35 images, reproducing 457 positives; grades 0/1 contain 1,017/270 images, reproducing 1,287 negatives. Four source rows are marked `adjudicated_gradable=0` with blank DR/DME grades and are excluded: `20060411_58550_0200_PP.png`, `IM002385.jpg`, `IM003718.jpg`, and `IM004176.jpg`. No finer grader-recorded exclusion reason is available. The historical run did not persist the input hash or command, so this is count-matching reconstructed provenance rather than a cryptographic binding to that run.
 
 **629-image subset provenance.** The 629-image Messidor-2 partition is carried from a pre-existing split file that predates this training run; its selection provenance is not documented. It is retained here only because the sight-threatening breakdown is stored for it alone.
 
@@ -286,7 +286,7 @@ The automated release gate passed on all six eligible evaluation datasets (APTOS
 | SHA-256, `ood_gate_dr_v1.0.0.npz` | `cb99b4d375ecc384ce6fbeff4f9b94c42613964b32b7a96cef8b3e1227dbf5b2` |
 | Integrity | The zip digest and every member digest are published in the v1.0.0 release's `SHA256SUMS.txt` and embedded in `retguard/weights.py`; `retguard verify` re-checks them |
 
-**The ONNX export failed its logit-parity tolerance.** Because deployment decisions consume calibrated probabilities, the practical impact is bounded by the probability difference (0.000626), but the check failed as recorded and export re-verification is required before any release. Six verification samples is a small parity check.
+**The ONNX export failed its logit-parity tolerance.** The six-sample check observed a maximum probability difference of 0.000626, but that limited result does not establish a global bound on decision impact. The artifact is unverified as released against the prespecified logit criterion; re-verification is required before deployment or clinical evaluation.
 
 **Latency.** 11.9 ms at batch size 1; 2.9 ms per image at batch 4; 1.6 ms per image at batch 8. **These are PyTorch BF16 benchmark timings from the pipeline log, not ONNX Runtime timings, and the GPU model is not recorded.** No edge-hardware or ONNX Runtime benchmark has been run. No network connectivity is required at inference time.
 
@@ -318,13 +318,13 @@ Stated bluntly, and drawn from the manuscript's Limitations section and the DR v
 
 3. **The three post-hoc operating points are circular.** OP-1, OP-2, and OP-3 were derived on the Messidor-2 benchmark and their sensitivity/specificity are reported on that same benchmark — in-sample threshold selection. They carry **no portable performance claim** and are subordinate to the pre-specified-threshold result (sensitivity 0.9716 / specificity 0.7607). Any use of OP-1's 0.9103/0.8990 as a deployment expectation is unsupported.
 
-4. **ONNX export logit-parity tolerance failure.** Maximum logit difference 0.002526 against a 0.001 threshold — recorded as FAILED. Probability parity passed at 0.000626 and the graph check passed, so practical impact is bounded, but the export is unverified as released. Re-verification is required.
+4. **ONNX export logit-parity tolerance failure.** Maximum logit difference 0.002526 against a 0.001 threshold — recorded as FAILED. The six-sample check observed a maximum probability difference of 0.000626 and the graph check passed, but neither establishes a global bound on decision impact. The export is unverified as released against the failed criterion; re-verification is required before deployment or clinical evaluation.
 
 5. **The deployed preprocessing recipe is not evidenced by run artifacts; it is reconstructed from source.** The preprocessing phase was skipped in the audited pipeline run (pre-existing processed data), so the DR module's input-preprocessing specification is **not evidenced by artifacts of that run**. It has since been fully reconstructed from the released source code: byte-for-byte the same five-step LOCKED fundus function as the glaucoma module (paper Section 2.2, verified from released source), and the accompanying inference package ships it parity-verified. The residual limitation is that the recipe's evidence is the released source, not an artifact of the executed run.
 
 6. **No Venn-Abers layer.** This module uses temperature scaling only. It lacks the distribution-free validity guarantee applied in the glaucoma and OCT modules.
 
-7. **Case definitions are under-specified.** The exact referable-DR grade cutoff, the sight-threatening grade boundary, and the Messidor-2 label provenance are not recorded in the audited artifacts. Every sight-threatening-sensitivity figure in Section 7.1 therefore rests on an undocumented boundary.
+7. **Case definitions are source-reconstructed, not runtime-bound.** Executable source defines grades 2-4 as positive and the severe subgroup as grades 3-4; the full-benchmark counts match the Google Brain adjudicated Messidor-2 label table. However, the historical run did not preserve its input-table hash or command, so this reconstruction is not cryptographic proof of the exact runtime input.
 
 8. **DME is invisible to this module.** The source labels encode DR severity only. A non-referable output does not exclude diabetic macular edema, whereas the reference standards of cleared comparator systems include DME.
 
@@ -346,8 +346,8 @@ Stated bluntly, and drawn from the manuscript's Limitations section and the DR v
 
 17. **No gradability or imageability pathway.** All benchmarks are curated and gradability-filtered. Prospective imageability — the metric on which cleared systems report 87-99% — is unmeasured. No mydriasis, field, or resolution input specification is defined. Deployment would require an explicit ungradable pathway distinct from the OOD gate.
 
-18. **Retrospective only.** Every result is retrospective and computed on curated public datasets. No prospective, intent-to-screen, or real-device validation exists. The documented retrospective-to-prospective compression in this field should be assumed to apply: the IDx-DR lineage reported 96.8% sensitivity retrospectively on Messidor-2 but 87.2% in its prospective pivotal trial.
+18. **Retrospective only.** Every result is retrospective and computed on curated research datasets with varied access conditions. No prospective, intent-to-screen, or real-device validation exists. The documented retrospective-to-prospective compression in this field should be assumed to apply: the IDx-DR lineage reported 96.8% sensitivity retrospectively on Messidor-2 but 87.2% in its prospective pivotal trial.
 
-19. **Reference-standard limitations.** Labels are the public datasets' labels after confident-learning cleaning. The exact Messidor-2 grade-set provenance is undocumented, and published comparators used expert-regrade reference standards, which biases any comparison in an unknowable direction.
+19. **Reference-standard limitations.** Labels are the source datasets' labels after the reported cleaning steps. Messidor-2 used the Google Brain table adjudicated by three retina specialists, but published comparators may use different expert regrades and endpoint conventions; their figures are therefore not directly exchangeable with this benchmark.
 
 20. **No regulatory status.** RETGUARD has no regulatory clearance, authorization, or certification anywhere. It is not a medical device.

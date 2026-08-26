@@ -234,7 +234,7 @@ class TestProvenanceAndDetails:
     def test_provenance_line_fields(self) -> None:
         html_out = ui._render_provenance_html(_result(), latency_ms=1234, tta=True)
         assert "1234 ms" in html_out
-        assert "retguard 1.1.0" in html_out
+        assert "retguard 1.1.1" in html_out
         assert "dr v1.0.0" in html_out
         assert "8-view" in html_out
 

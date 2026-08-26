@@ -193,7 +193,7 @@ RESULT_DISCLAIMER_MD: Final = (
 )
 
 PROVENANCE_LINE: Final = (
-    "{latency_ms} ms · retguard 1.1.0 · {module} v1.0.0 · onnx sha256 "
+    "{latency_ms} ms · retguard 1.1.1 · {module} v1.0.0 · onnx sha256 "
     "{onnx_sha12} · CPU · {view_count}-view"
 )
 
@@ -207,13 +207,13 @@ DETAILS_BODY_MD: Final = (
 ACCORDION_ABOUT_LABEL: Final = "About this demo — intended use, evidence, limitations"
 
 ABOUT_BODY_MD: Final = """\
-RETGUARD is a research artifact by a single author (Sameh Aboelmaaty, Anchor Neuro). It is not a medical device, has no regulatory clearance in any jurisdiction, and must not be used for diagnosis, screening, triage, or patient management. All evidence is retrospective, on public research datasets; no prospective validation and no validation on a target camera or OCT device has been performed.
+RETGUARD is a research artifact by a single author (Sameh Aboelmaaty, Anchor Neuro). It is not a medical device, has no regulatory clearance in any jurisdiction, and must not be used for diagnosis, screening, triage, or patient management. All evidence is retrospective and based on research datasets with varied access conditions; no prospective validation and no validation on a target camera or OCT device has been performed.
 
-External results (bootstrap 95% CI): DR — Messidor-2 (n=1,744, zero-shot) AUC 0.9691 (0.9595–0.9772), sensitivity 97.16%, specificity 76.07% at the pre-specified threshold. Glaucoma — REFUGE-Val (n=400, zero-shot) AUC 0.9278 (0.8642–0.9763); ORIGA (n=650, zero-shot) AUC 0.8729 (0.8399–0.9028). OCT — Duke Srinivasan (n=3,231, zero-shot) AMD-vs-rest AUC 0.9883 (0.9845–0.9915).
+External results (bootstrap 95% CI): DR — Messidor-2 (n=1,744, zero-shot) AUC 0.9691 (0.9595–0.9772), sensitivity 97.16%, specificity 76.07% at the pre-specified threshold. Glaucoma — REFUGE-Val (n=400, zero-shot) AUC 0.9278 (0.8642–0.9763); ORIGA (n=650, zero-shot) AUC 0.8729 (0.8399–0.9028). OCT — OCTID (n=261, external; 55 AMD positives and no DME cases) AMD-vs-rest AUC 0.9999 (0.9995–1.0000). The archived Duke performance claim is withdrawn after the released-model reproduction gate failed.
 
-Known failure modes, reported with the same prominence: the glaucoma module performs below chance on optic-disc crops (RIM-ONE DL AUC 0.3667) and degrades on cropped fields of view; the OCT module outputs "Normal" for most non-AMD/DME pathologies (347 of 354 in a confounder test); zero-shot external DME evidence rests on one dataset with B-scan-level sensitivity 77.38%; DR calibration exceeds the project's 0.05 ECE gate; one glaucoma result (ORIGA, AUC 0.9988 under training-domain preprocessing) is unconfirmed pending independent replication; the DR ONNX export failed its logit-parity tolerance (max difference 0.002526 vs 0.001), with probability parity passing at 0.000626.
+Known failure modes, reported with the same prominence: the glaucoma module performs below chance on optic-disc crops (RIM-ONE DL AUC 0.3667) and degrades on cropped fields of view; the OCT module outputs "Normal" for most non-AMD/DME pathologies (347 of 354 in a confounder test), and no validated strictly external DME performance estimate remains after withdrawal of the Duke claims; DR calibration exceeds the project's 0.05 ECE gate; one glaucoma result (ORIGA, AUC 0.9988 under training-domain preprocessing) is unconfirmed pending independent replication; the DR ONNX export failed its logit-parity tolerance (max difference 0.002526 vs 0.001), with probability parity passing at 0.000626.
 
-Code: PolyForm Noncommercial 1.0.0. Weights, model cards, documentation: CC BY-NC 4.0. Source, model cards, and citation: https://github.com/anchor-neuro/retguard\
+Code: PolyForm Noncommercial 1.0.0. The release labels weights, model cards, and documentation CC BY-NC 4.0, but underlying dataset rights may impose additional limits; redistribution and commercial authorization are not established for every contributing source. Source, model cards, and citation: https://github.com/anchor-neuro/retguard\
 """
 
 EMPTY_STATE_HTML: Final = (
@@ -297,7 +297,7 @@ For Research Use Only. Not for use in diagnostic procedures.
 
 Code: PolyForm Noncommercial 1.0.0 · Weights: CC BY-NC 4.0 · Example images: attributions in ATTRIBUTIONS.md · [Intended use](https://github.com/anchor-neuro/retguard#intended-use-and-limitations) · [Model cards](https://github.com/anchor-neuro/retguard/tree/main/docs) · Source: https://github.com/anchor-neuro/retguard
 
-Aboelmaaty S. RETGUARD: Calibrated, Out-of-Distribution-Aware Deep Learning for Multi-Disease Retinal Screening. medRxiv, 2026. · Sameh Aboelmaaty, Anchor Neuro — ghoneim2012@gmail.com\
+Aboelmaaty S. RETGUARD: Retrospective Multi-Dataset Development and External Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus Photographs and OCT B-Scans. Manuscript in preparation, 2026. · Sameh Aboelmaaty, Anchor Neuro — ghoneim2012@gmail.com\
 """
 
 PRIVACY_LOCAL_MD: Final = (
@@ -333,7 +333,7 @@ SERVE_TERMINAL_STOP: Final = "Press Ctrl+C to stop."
 # install-command rule; UI_COPY.md 1.1 carries the same wording).
 SERVE_MISSING_GRADIO: Final = (
     "The UI requires the optional dependency set: pip install "
-    '"retguard[ui] @ git+https://github.com/anchor-neuro/retguard@v1.1.0"'
+    '"retguard[ui] @ git+https://github.com/anchor-neuro/retguard@v1.1.1"'
 )
 
 HUB_DISCLAIMER_MD: Final = """\

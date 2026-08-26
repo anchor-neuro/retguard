@@ -158,7 +158,7 @@ def test_full_result_renders_and_matches_the_predictor(
     assert "DISTRIBUTION" in panel
     assert "Model output:" in panel
     provenance = _find_fragment(response, "retguard-provenance")
-    assert "retguard 1.1.0" in provenance
+    assert "retguard 1.1.1" in provenance
     expected_views = 2 if module == "oct" else 8
     assert f"{expected_views}-view" in provenance
     if module == "oct":

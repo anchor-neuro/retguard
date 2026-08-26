@@ -303,7 +303,7 @@ class TestInstallCommandRule:
 
     def test_missing_gradio_hint_points_at_the_github_tag(self) -> None:
         assert (
-            "git+https://github.com/anchor-neuro/retguard@v1.1.0"
+            "git+https://github.com/anchor-neuro/retguard@v1.1.1"
             in ui_text.SERVE_MISSING_GRADIO
         )
         assert "[ui]" in ui_text.SERVE_MISSING_GRADIO
