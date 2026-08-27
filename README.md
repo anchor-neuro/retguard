@@ -5,8 +5,9 @@ Calibrated, out-of-distribution-aware retinal research models — referable diab
 [![License](https://img.shields.io/badge/license-PolyForm%20NC%201.0.0%20%2B%20CC%20BY--NC%204.0-lightgrey)](LICENSE.md)
 [![Python](https://img.shields.io/badge/python-%E2%89%A53.10-blue)](pyproject.toml)
 [![CI](https://github.com/anchor-neuro/retguard/actions/workflows/ci.yml/badge.svg)](https://github.com/anchor-neuro/retguard/actions/workflows/ci.yml)
+[![Website](https://img.shields.io/badge/website-retguard.com-0b74de)](https://www.retguard.com)
 
-Manuscript in preparation — see [Citation](#citation) · [Model cards](docs/) · [Weights (v1.0.0 release)](https://github.com/anchor-neuro/retguard/releases/tag/v1.0.0) · [Commercial licensing](COMMERCIAL-LICENSE.md)
+Version 1 submitted to medRxiv; public DOI pending screening — see the [research website](https://www.retguard.com) · [Citation](#citation) · [Model cards](docs/) · [Weights (v1.0.0 release)](https://github.com/anchor-neuro/retguard/releases/tag/v1.0.0) · [Commercial licensing](COMMERCIAL-LICENSE.md)
 
 ![RETGUARD system overview: three research classifiers with experimental calibration and monitoring components](figures/F1_system_overview.png)
 
@@ -119,7 +120,7 @@ The released weights were trained on research datasets obtained through access r
   title   = {{RETGUARD}: Retrospective Multi-Dataset Development and External
              Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus
              Photographs and OCT B-Scans},
-  note    = {Manuscript in preparation},
+  note    = {Version 1 submitted to medRxiv; public DOI pending screening},
   year    = {2026}
 }
 ```
@@ -130,6 +131,6 @@ Or use GitHub's "Cite this repository" button, which reads [CITATION.cff](CITATI
 
 This work builds on research datasets with varied self-service, account-gated, challenge, and request-based access conditions: EyePACS, DDR, APTOS, IDRiD, DeepDRiD, Messidor-2, AIROGS, G1020, REFUGE, ORIGA, DRISHTI-GS, FIVES, RIM-ONE DL, ACRIMA, Kermany, Noor, OCTDL, Duke/Srinivasan, and OCTID. Each dataset's verified terms and unresolved rights are summarized in the manuscript appendix.
 
-Sameh Aboelmaaty — ghoneim2012@gmail.com — Anchor Neuro, Delaware, USA.
+Sameh Aboelmaaty — ghoneim2012@gmail.com — Anchor Neuro, Delaware, USA — [www.retguard.com](https://www.retguard.com).
 
 Competing interests: the author developed RETGUARD and founded Anchor Neuro, which may commercialize the system.

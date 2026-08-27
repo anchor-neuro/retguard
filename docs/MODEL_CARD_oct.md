@@ -37,7 +37,7 @@ Every number in this card is copied from the RETGUARD manuscript evidence base o
 | Repository | https://github.com/anchor-neuro/retguard |
 | Public weights | GitHub release `v1.0.0`; no public Hugging Face mirror is currently verified |
 
-**Paper citation.** Aboelmaaty S. RETGUARD: Retrospective Multi-Dataset Development and External Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus Photographs and OCT B-Scans. Revised manuscript in preparation, 2026-08-27. Anchor Neuro, Delaware, USA.
+**Paper citation.** Aboelmaaty S. RETGUARD: Retrospective Multi-Dataset Development and External Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus Photographs and OCT B-Scans. Version 1 submitted to medRxiv; public DOI pending screening, 2026-08-27. Anchor Neuro, Delaware, USA.
 
 **Input preprocessing (the shipped recipe, in this exact order; parity-verified against the released source):** (1) border crop by grayscale threshold 10 with a bounding rectangle, applied only if the region of interest exceeds 30% of both original dimensions; (2) resize to 480 x 480 with Lanczos4 interpolation; (3) grayscale conversion; (4) percentile normalization — clip to the 1st and 99th percentiles and rescale to [0, 255], skipped if that range is degenerate; (5) CLAHE, clip limit 2.0, 8x8 tile grid; (6) replication of the grayscale channel to three channels; then, at model input, ImageNet normalization (mean [0.485, 0.456, 0.406], std [0.229, 0.224, 0.225]).
 

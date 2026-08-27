@@ -4,6 +4,7 @@ title: "RETGUARD"
 version: 1.1.1
 date-released: 2026-08-27
 repository-code: "https://github.com/anchor-neuro/retguard"
+url: "https://www.retguard.com"
 license: PolyForm-Noncommercial-1.0.0
 authors:
   - family-names: Aboelmaaty
@@ -12,7 +13,7 @@ authors:
 preferred-citation:
   type: generic
   title: "RETGUARD: Retrospective Multi-Dataset Development and External Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus Photographs and OCT B-Scans"
-  notes: "Manuscript in preparation"
+  notes: "Version 1 submitted to medRxiv; public DOI pending screening"
   year: 2026
   authors:
     - family-names: Aboelmaaty

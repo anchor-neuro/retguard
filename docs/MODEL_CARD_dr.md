@@ -34,7 +34,7 @@ Every number in this card is copied from the RETGUARD manuscript evidence base o
 | Repository | https://github.com/anchor-neuro/retguard |
 | Public weights | GitHub release `v1.0.0`; no public Hugging Face mirror is currently verified |
 
-**Paper citation.** Aboelmaaty S. RETGUARD: Retrospective Multi-Dataset Development and External Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus Photographs and OCT B-Scans. Revised manuscript in preparation, 2026-08-27. Anchor Neuro, Delaware, USA.
+**Paper citation.** Aboelmaaty S. RETGUARD: Retrospective Multi-Dataset Development and External Testing of Calibrated Deep-Learning Classifiers for Retinal Fundus Photographs and OCT B-Scans. Version 1 submitted to medRxiv; public DOI pending screening, 2026-08-27. Anchor Neuro, Delaware, USA.
 
 **Verified training configuration** (from pipeline log and `history.csv`): loss — focal (gamma 2.0) on approximately 70% of batches, binary cross-entropy on approximately 30% MixUp batches; label smoothing epsilon 0.1 (targets 0 to 0.05, 1 to 0.95); precision BF16; drop-path 0.2; EMA decay 0.9998; maximum epochs 40, epochs run 25, best epoch 18 (best validation AUC 0.9444); early stopping patience 7, AUC-based, triggered at epoch 25; checkpoint policy — highest AUC with F1 >= 0.73.
 
